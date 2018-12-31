@@ -296,12 +296,19 @@ public class GM_HE_LH_YE_ICSSummative {
 		c.println();
 		switch (schoolyardChoice) {
 		    case 1: // Ivy
-			typeByChar("Ivy: There's no 'I' in team, nor is "
-			+ "there a 'u' in \"relationship\".", 2,
-			"snd/02_BEEP.wav", '\n');
-			typeByChar("Looks like I need to get more charm, "
-			+ "brains, and brawn before I can approach her.", 2,
-			"snd/02_BEEP.wav", '\n');
+			if (player.getCharm() >= 80
+			    && player.getIntelligence() >= 60
+			    && player.getKarma() <= -150
+			    && player.getStrength() >= 30) {
+			    // positive response
+			} else {
+			    typeByChar("Ivy: There's no 'I' in team, nor is "
+			    + "there a 'u' in \"relationship\"!", 2,
+			    "snd/02_BEEP.wav", '\n');
+			    typeByChar("Looks like I need to get more charm, "
+			    + "brains, and brawn before I can approach her.",
+			    2, "snd/02_BEEP.wav", '\n');
+			}
 			break;
 		    case 2: // Kate
 			if (player.getCharm() >= 80
