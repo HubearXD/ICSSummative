@@ -2,6 +2,7 @@ import java.awt.Color;
 
 public class Player {
     public Player(int mentalState) {
+	// TODO: adjust stats
 	switch (mentalState) {
 	    case 1:
 		break;
