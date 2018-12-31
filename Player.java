@@ -2,31 +2,25 @@ import java.awt.Color;
 
 public class Player {
     public Player(int mentalState) {
-	switch (mentalState) { 
-	/*
-	    Selecting 1, 2, 3, 4 chooses your mental state:
-	    1: Loved
-	    2: Depressed
-	    3: Hopeful
-	    4: Nervous
-	*/
+	// Mental states correspond to storylines:
+	// 1. Loved: Parents die and leave you an inheritance
+	// 2. Depressed: Long lost bank account rediscovered
+	// 3. Hopeful: Work hard and receive a major bonus
+	// 4. Nervous: Get buff and earn a well-paying movie contract
 	
-	
-	    case 1:
-		break;
-	    case 2:
-		break;
-	    case 3:
-		break;
-	    case 4:
-		break;
-	    default:
-		break;
+	// change invalid storyline values to a default
+	if (mentalState <= 1 || mentalState >= 4) { 
+	    mentalState = 1;
+	} else {
+	    this.storyline = mentalState;
 	}
     }
     
     public final String NAME = "CONNER";
     
+    private int storyline;
+    
+    // stats
     private int charm;
     private int intelligence;
     private int karma;

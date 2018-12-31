@@ -39,6 +39,7 @@ public class GM_HE_LH_YE_ICSSummative {
 	return in;
     }
     
+    // simplifies audio resource imports
     private static AudioStream loadSound(String filepath) {
 	try {
 	    return new AudioStream(new FileInputStream(filepath));
@@ -46,32 +47,44 @@ public class GM_HE_LH_YE_ICSSummative {
 	    return null;
 	}
     }
-	
     
+    // delivers text output one character at a time at default speed
     private static void typeByChar(String msg) {
+	typeByChar(msg, 1);
+    }
+    
+    // overloaded to allow typing speed adjustment
+    private static void typeByChar(String msg, int speed) {
 	boolean debug = false; // setting true removes typing delay
 	if (debug) {
 	    c.print(msg);
 	} else {
+	    // changes invalid speed values to default
+	    if (speed < 1 || speed > 5) {
+		speed = 1; 
+	    }
+	    
 	    for (int i = 0 ; i < msg.length() ; i++) {
 		char currentChar = msg.charAt(i);
 		c.print(currentChar);
-		wait(currentChar == '\n' ? 500 : 20);
+		wait(currentChar == '\n' ? 500 : 20 / speed);
 	    }
 	}
     }
     
+    // reads dialogue from TXT files
     private static void parseDialogue(String filepath) throws IOException {
 	BufferedReader br = new BufferedReader(new FileReader(filepath));
 	try {
 	    String line = br.readLine();
 	    
-	    while(line != null) {
+	    while (line != null) {
 		// output style specified using line prefixes
 		if (line.equals("^")) {
 		    wait(500);
 		    c.println();
 		} else {
+		    AudioPlayer.player.start(loadSound("snd/02_TEXTBEEP.wav"));
 		    if(line.startsWith(". ")) {
 			c.println(line);
 		    } else if (line.startsWith(">")) {
@@ -81,27 +94,61 @@ public class GM_HE_LH_YE_ICSSummative {
 		    }
 		}
 		line = br.readLine();
+	    }            
+	} finally {
+	    br.close();
+	}
+    }
+    
+    // overloaded to await keypress before advancing to next line
+    private static void parseDialogue(String filepath, char awaitTarget) throws IOException {
+	BufferedReader br = new BufferedReader(new FileReader(filepath));
+	try {
+	    String line = br.readLine();
+	    
+	    while (line != null) {
+		// output style specified using line prefixes
+		if (line.equals("^")) {
+		    wait(500);
+		    c.println();
+		} else {
+		    AudioPlayer.player.start(loadSound("snd/02_TEXTBEEP.wav"));
+		    if (line.startsWith(". ")) {
+			c.println(line);
+		    } else if (line.startsWith(">")) {
+			typeByChar(line.substring(2, line.length()) + "\n");
+		    } else {
+			c.println(line);
+		    }
+		    awaitTyping(awaitTarget);
+		}
+		line = br.readLine();
 	    }
 	} finally {
 	    br.close();
 	}
     }
     
-    private static void parseDialogue(String filepath, char awaitTarget) throws IOException {
+    // overloaded to adjust typing speed and await keypress before
+    // advancing to next line
+    private static void parseDialogue(String filepath, int charSpeed,
+	    char awaitTarget) throws IOException {
 	BufferedReader br = new BufferedReader(new FileReader(filepath));
 	try {
 	    String line = br.readLine();
 	    
-	    while(line != null) {
+	    while (line != null) {
 		// output style specified using line prefixes
 		if (line.equals("^")) {
 		    wait(500);
 		    c.println();
 		} else {
-		    if(line.startsWith(". ")) {
+		    AudioPlayer.player.start(loadSound("snd/02_TEXTBEEP.wav"));
+		    if (line.startsWith(". ")) {
 			c.println(line);
 		    } else if (line.startsWith(">")) {
-			typeByChar(line.substring(2, line.length()) + "\n");
+			typeByChar(line.substring(2, line.length()) + "\n",
+				charSpeed);
 		    } else {
 			c.println(line);
 		    }
@@ -139,6 +186,7 @@ public class GM_HE_LH_YE_ICSSummative {
 	// these characteristics are ultimately ignored
 	c.print("What is your name? ");
 	String name = c.readString();
+	AudioPlayer.player.start(loadSound("snd/02_TEXTBEEP.wav"));
 	typeByChar("What do you look like?\n");
 	c.print("Your hair colour? ");
 	c.readString();
@@ -151,6 +199,7 @@ public class GM_HE_LH_YE_ICSSummative {
 
 	// mental state selection, which affects story
 	c.println();
+	AudioPlayer.player.start(loadSound("snd/02_TEXTBEEP.wav"));
 	typeByChar("How is your little buddy feeling today?\n");
 	c.println("1. LOVED");
 	c.println("2. DEPRESSED");
@@ -163,6 +212,7 @@ public class GM_HE_LH_YE_ICSSummative {
 	} while(sel < '1' || sel > '4');
 	
 	wait(1000);
+	AudioPlayer.player.start(loadSound("snd/02_TEXTBEEP.wav"));
 	typeByChar("Very good.");
 	wait(3000);
 	c.clear();
@@ -175,25 +225,33 @@ public class GM_HE_LH_YE_ICSSummative {
 	parseDialogue("dialogue/02_INTRO.txt");
 	
 	wait(3000);
-	AudioPlayer.player.stop(introMusic);
-	AudioStream laugh = loadSound("snd/02_LAUGH.wav");
+	AudioStream laugh = loadSound("snd/03_LAUGH.wav");
 	AudioPlayer.player.start(laugh);
 	
 	if (!name.equalsIgnoreCase("Conner")) {
 	    typeByChar("Y O U R   N A M E  I S . . .");
 	    for (int i = 0 ; i < 256 ; i++) {
+		wait(15);
 		Color bg = new Color(i, i, i);
 		c.setColor(bg);
-		c.setTextBackgroundColor(bg);
-		wait(15);
 		c.fillRect(0, 0, c.getWidth(), c.getHeight());
+		c.setTextBackgroundColor(bg);
 		c.setCursor(7, 1);
 		c.print("Y O U R   N A M E  I S . . .");
 	    }
-	    wait(1000);
+	    wait(2000);
+	} else {
+	    for (int i = 0; i < 256; i++) {
+		Color bg = new Color(i, i, i);
+		c.setColor(bg);
+		wait(15);
+		c.fillRect(0, 0, c.getWidth(), c.getHeight());
+	    }
+	    wait(2000);
 	}
 	
 	c.clear();
+	AudioPlayer.player.stop(introMusic);
 	AudioPlayer.player.stop(laugh);
 	c.setColor(Color.black);
 	c.fillRect(0, 0, c.getWidth(), c.getHeight());
@@ -201,6 +259,6 @@ public class GM_HE_LH_YE_ICSSummative {
 	c.println("(Press ENTER to advance dialogue.)");
 	
 	// story begins
-	parseDialogue("dialogue/03_DAY1.txt", '\n');
+	parseDialogue("dialogue/03_DAY1.txt", 2, '\n');
     }
 }
