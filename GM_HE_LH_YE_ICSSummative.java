@@ -147,7 +147,7 @@ public class GM_HE_LH_YE_ICSSummative {
 	player = new Player(Character.getNumericValue(sel));
 	
 	// second part of introduction
-	parseDialogue("02_INTRO.txt");
+	parseDialogue("dialogue/02_INTRO.txt");
 	
 	c.clear();
 	c.println("(Press ENTER to advance dialogue.)");
@@ -155,6 +155,6 @@ public class GM_HE_LH_YE_ICSSummative {
 	c.clear();
 	
 	// story begins
-	parseDialogue("03_DAY1.txt");
+	parseDialogue("dialogue/03_DAY1.txt", '\n');
     }
 }
