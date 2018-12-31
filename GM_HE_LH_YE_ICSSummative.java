@@ -293,8 +293,15 @@ public class GM_HE_LH_YE_ICSSummative {
 		schoolyardChoice = awaitDigitRange(5);
 		
 		// dialogues with girls
+		c.println();
 		switch (schoolyardChoice) {
 		    case 1: // Ivy
+			typeByChar("Ivy: There's no 'I' in team, nor is "
+			+ "there a 'u' in \"relationship\".", 2,
+			"snd/02_BEEP.wav", '\n');
+			typeByChar("Looks like I need to get more charm, "
+			+ "brains, and brawn before I can approach her.", 2,
+			"snd/02_BEEP.wav", '\n');
 			break;
 		    case 2: // Kate
 			if (player.getCharm() >= 80
@@ -354,6 +361,9 @@ public class GM_HE_LH_YE_ICSSummative {
 		}
 		c.clear();
 	    } while (schoolyardChoice != 5);
+	    
+	    // school morning
+	    c.clear();
 	}
     }
 }
