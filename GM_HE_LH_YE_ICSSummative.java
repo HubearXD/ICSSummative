@@ -8,9 +8,12 @@ import sun.audio.*;
 import java.util.Random;
 
 public class GM_HE_LH_YE_ICSSummative {
-    private static AudioStream as;    
+    private final static String WEEK[] = {"MONDAY", "TUESDAY", "WEDNESDAY",
+					  "THURSDAY", "FRIDAY"};
+    
     private static Console c;
     private static Player player;
+    private static int day = 1;
     
     // awaits a numeric key press within a range and returns the number
     private static int awaitDigitRange(int max) {
@@ -18,13 +21,6 @@ public class GM_HE_LH_YE_ICSSummative {
 	do {
 	    in = Character.getNumericValue(c.getChar());
 	} while(in < 1 || in > max);
-	return in;
-    }
-    
-    // overloaded to allow playing sound on selection
-    private static int awaitDigitRange(int max, String soundFilePath) {
-	int in = awaitDigitRange(max);
-	AudioPlayer.player.start(loadSound(soundFilePath));
 	return in;
     }
     
@@ -40,35 +36,18 @@ public class GM_HE_LH_YE_ICSSummative {
 	    return in;
 	}
     }
-    
-    // overloaded to accept multiple characters
-    private static char awaitTyping(char[] targets) {
-	char in = 0;
-	boolean isTarget = false;
 	
-	do {
-	    in = c.getChar();
-	    for(int i = 0; i < targets.length; i++) {
-		if(in == targets[i]) {
-		    isTarget = true;
-		    break;
-		}
-	    }
-	} while(!isTarget);
-	return in;
-    }
-    
     // fades to black using progressively darker fullscreen rectangles
     private static void fadeBlack() {
 	for (int i = 255; i >= 0; i--) {
 	    Color bg = new Color(i, i, i);
 	    c.setColor(bg);
 	    c.fillRect(0, 0, c.getWidth(), c.getHeight());
-	    wait(15);
+	    wait(10);
 	}
     }
     
-    // fades to white using progressively darker fullscreen rectangles
+    // fades to white using progressively lighter fullscreen rectangles
     private static void fadeWhite() {
 	for (int i = 0; i <= 255; i++) {
 	    Color bg = new Color(i, i, i);
@@ -86,15 +65,34 @@ public class GM_HE_LH_YE_ICSSummative {
 	    return null;
 	}
     }
-	
+    
     // delivers text output one character at a time at default speed
     private static void typeByChar(String msg) {
-	typeByChar(msg, 1);
+	typeByChar(msg, 1, (char) 0);
     }
     
     // overloaded to allow typing speed adjustment
     private static void typeByChar(String msg, int speed) {
-	boolean debug = false; // setting true removes typing delay
+	typeByChar(msg, speed, (char) 0);
+    }
+    
+    // overloaded to allow playing sound on text advance
+    private static void typeByChar(String msg, String soundFilePath) {
+	AudioPlayer.player.start(loadSound(soundFilePath));
+	typeByChar(msg, 1, (char) 0);
+    }
+    
+    // overloaded to allow typing speed adjustment
+    // and playing sound on text advance
+    private static void typeByChar(String msg, int speed,
+	    String soundFilePath) {
+	AudioPlayer.player.start(loadSound(soundFilePath));
+	typeByChar(msg, speed, (char) 0);
+    }
+    
+    // overloaded to allow typing speed adjustment and await keypress
+    private static void typeByChar(String msg, int speed, char awaitTarget) {
+	boolean debug = true; // setting true removes typing delay
 	if (debug) {
 	    c.print(msg);
 	} else {
@@ -109,20 +107,13 @@ public class GM_HE_LH_YE_ICSSummative {
 		wait((currentChar == '\n') ? 500 : (20 / speed));
 	    }
 	}
+	awaitTyping(awaitTarget);
     }
-    
-    // overloaded to allow playing sound on text advance
-    private static void typeByChar(String msg, String soundFilePath) {
-	AudioPlayer.player.start(loadSound(soundFilePath));
-	typeByChar(msg, 1);
-    }
-    
-    // overloaded to allow typing speed adjustment
-    // and playing sound on text advance
+	
     private static void typeByChar(String msg, int speed,
-	    String soundFilePath) {
+	    String soundFilePath, char awaitTarget) {
 	AudioPlayer.player.start(loadSound(soundFilePath));
-	typeByChar(msg, speed);
+	typeByChar(msg, speed, awaitTarget);
     }
     
     // reads dialogue from TXT files
@@ -131,7 +122,8 @@ public class GM_HE_LH_YE_ICSSummative {
     }
     
     // overloaded to await keypress before advancing to next line
-    private static void parseDialogue(String filePath, char awaitTarget) throws IOException {
+    private static void parseDialogue(String filePath, char awaitTarget)
+	throws IOException {
 	parseDialogue(filePath, 1, awaitTarget);
     }
     
@@ -151,9 +143,7 @@ public class GM_HE_LH_YE_ICSSummative {
 		} else if (line.equals("\\")) {
 		    c.clear();
 		} else {
-		    if (line.startsWith(". ")) {
-			c.println(line);
-		    } else if (line.startsWith(">")) {
+		    if (line.startsWith(">")) {
 			typeByChar(line.substring(2, line.length()) + "\n",
 				charSpeed, "snd/02_BEEP.wav");
 		    } else {
@@ -206,15 +196,14 @@ public class GM_HE_LH_YE_ICSSummative {
 
 	// mental state selection, which affects story
 	c.println();
-	typeByChar("How is your little buddy feeling today?\n", "snd/02_BEEP.wav");
+	typeByChar("How is your little buddy feeling today?\n",
+	    "snd/02_BEEP.wav");
 	c.println("1. LOVED");
 	c.println("2. DEPRESSED");
 	c.println("3. HOPEFUL");
 	c.println("4. NERVOUS");
+	int mentalState = awaitDigitRange(4);
 	
-	int mentalState = awaitDigitRange(4, "snd/02_LAUGH.wav");
-	
-	wait(1000);
 	typeByChar("Very good.", "snd/02_BEEP.wav");
 	wait(3000);
 	c.clear();
@@ -222,11 +211,10 @@ public class GM_HE_LH_YE_ICSSummative {
 	// creates Player instance for the protagonist character
 	player = new Player(mentalState);
 	
-	
 	// second part of introduction
 	parseDialogue("dialogue/02_INTRO.txt");
 	
-	wait(3000);
+	wait(2000);
 	AudioStream laugh = loadSound("snd/03_LAUGH.wav");
 	AudioPlayer.player.start(laugh);
 	
@@ -243,7 +231,7 @@ public class GM_HE_LH_YE_ICSSummative {
 	    }
 	    wait(2000);
 	} else {
-	    fadeBlack();
+	    fadeWhite();
 	    wait(2000);
 	}
 	
@@ -261,26 +249,111 @@ public class GM_HE_LH_YE_ICSSummative {
 	
 	// choice to take sandwich
 	c.println();
-	typeByChar("Take the sandwich?\n", "snd/02_BEEP.wav");
+	typeByChar("Take the sandwich?\n", 2, "snd/02_BEEP.wav");
 	c.println("1. Bring it to school");
 	c.println("2. Leave it behind");
 	c.println();
-	int choice = awaitDigitRange(2, "snd/03_LAUGH.wav");
+	int sandwichChoice = awaitDigitRange(2);
 	
-	if (choice == 1) {
-	    player.addKarma(2);
+	if (sandwichChoice == 1) {
+	    player.addKarma(20);
 	    player.hasSandwich = true;
 	    c.print("You got an item: ");
-	    typeByChar("CRUSTY SANDWICH\n");
+	    typeByChar("CRUSTY SANDWICH.\n", 2, "snd/02_BEEP.wav");
+	    c.println("+20 Karma");
 	} else {
-	    player.addKarma(-2);
+	    player.addKarma(-20);
 	    player.hasSandwich = false;
-	    typeByChar("I left the sandwich alone.\n", "snd/02_BEEP.wav");
+	    typeByChar("You left the sandwich alone.\n", 2,
+		"snd/02_BEEP.wav");
+	    c.println("-20 Karma");
 	}
 	awaitTyping('\n');
 	
-	typeByChar("Bye Mom, Bye Dad, I'm leaving!", 2, "snd/02_BEEP.wav");
-	awaitTyping('\n');
+	c.println();
+	typeByChar("Me: \"Bye Mom, bye Dad, I'm leaving!\"", 2,
+	    "snd/02_BEEP.wav", '\n');
 	fadeBlack();
+	
+	// schoolyard
+	c.clear();
+	for (int day = 1;; day++) {
+	    
+	    typeByChar("What do you do?\n", 2, "snd/02_BEEP.wav");
+	    int schoolyardChoice;
+	    do {
+		c.println("DAY " + day + ": " + WEEK[(day - 1) % 5]);
+		c.println("8:30 a.m.");
+		c.println();
+		c.println("1. Talk to Ivy");
+		c.println("2. Talk to Kate");
+		c.println("3. Talk to Miranda");
+		c.println("4. Talk to Tiffany");
+		c.println("5. Go inside");
+		schoolyardChoice = awaitDigitRange(5);
+		
+		// dialogues with girls
+		switch (schoolyardChoice) {
+		    case 1: // Ivy
+			break;
+		    case 2: // Kate
+			if (player.getCharm() >= 80
+			    && player.getIntelligence() >= 30
+			    && player.getKarma() >= 50
+			    && player.getStrength() >= 100) {
+			    // positive response
+			} else {
+			    typeByChar("She's MY type: cute. I'm gonna try "
+				+ "to talk to her?\"\n", 2,
+				"snd/02_BEEP.wav", '\n');
+			    typeByChar("Me: \"Hey, cutie, the name's Conner. "
+				+ "What's yours?.\"\n", 2, "snd/02_BEEP.wav",
+				'\n');
+			    typeByChar("Raian: \"HEY LITTLE BRAT! You're way "
+				+ "too wimpy and weak to talk to Kate! Look "
+				+ "at yourself, dwarf. Think ANY girl would "
+				+ "want to be with you? Make sure you can "
+				+ "look at a mirror without breaking it "
+				+ "before you punish her eyes like this!"
+				+ "\"\n", 2, "snd/02_BEEP.wav", '\n');
+			}
+			break;
+		    case 3: // Miranda
+			if (player.getCharm() >= 80
+			    && player.getIntelligence() >= 100
+			    && player.getStrength() >= 30) {
+			    // positive response
+			} else {
+			    typeByChar("Me: \"Hey, what are you "
+				+ "looking at?\"\n", 2, "snd/02_BEEP.wav",
+				'\n');
+			    typeByChar("Miranda: \"Go away, I'm studying for "
+				+ "AIME. Talk to me when you score perfect "
+				+ "on AMC 12.\"\n", 2, "snd/02_BEEP.wav",
+				'\n');
+			    typeByChar("Me: \"Okay then.\"\n", 2,
+				"snd/02_BEEP.wav", '\n');
+			}
+			break;
+		    case 4: // Tiffany
+			if (player.getCharm() >= 40
+			    && player.getIntelligence() >= 40
+			    && player.getKarma() <= -20
+			    && player.getStrength() >= 60) {
+			    // positive response
+			} else {
+			    typeByChar("Tiffany: \"Sorry not interested. Who "
+				+ "do you think you are anyway?\"\n", 2,
+				"snd/02_BEEP.wav", '\n');
+			    typeByChar("Looks like I need to catch her "
+				+ "attention and get on her good side "
+				+ "somehow. Do I need more looks?\n", 2,
+				"snd/02_BEEP.wav", '\n');
+			}
+			break;
+		}
+		c.clear();
+	    } while (schoolyardChoice != 5);
+	}
     }
 }
