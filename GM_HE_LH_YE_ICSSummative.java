@@ -17,8 +17,14 @@ public class GM_HE_LH_YE_ICSSummative {
 	int in = 0;
 	do {
 	    in = Character.getNumericValue(c.getChar());
-	}
-	while(in < 1 || in > max);
+	} while(in < 1 || in > max);
+	return in;
+    }
+    
+    // overloaded to allow playing sound on selection
+    private static int awaitDigitRange(int max, String soundFilePath) {
+	int in = awaitDigitRange(max);
+	AudioPlayer.player.start(loadSound(soundFilePath));
 	return in;
     }
     
@@ -30,8 +36,7 @@ public class GM_HE_LH_YE_ICSSummative {
 	    char in = 0;
 	    do {
 		in = c.getChar();
-	    }
-	    while(in != target);
+	    } while(in != target);
 	    return in;
 	}
     }
@@ -55,7 +60,17 @@ public class GM_HE_LH_YE_ICSSummative {
     
     // fades to black using progressively darker fullscreen rectangles
     private static void fadeBlack() {
-	for (int i = 0; i < 256; i++) {
+	for (int i = 255; i >= 0; i--) {
+	    Color bg = new Color(i, i, i);
+	    c.setColor(bg);
+	    c.fillRect(0, 0, c.getWidth(), c.getHeight());
+	    wait(15);
+	}
+    }
+    
+    // fades to white using progressively darker fullscreen rectangles
+    private static void fadeWhite() {
+	for (int i = 0; i <= 255; i++) {
 	    Color bg = new Color(i, i, i);
 	    c.setColor(bg);
 	    c.fillRect(0, 0, c.getWidth(), c.getHeight());
@@ -71,7 +86,7 @@ public class GM_HE_LH_YE_ICSSummative {
 	    return null;
 	}
     }
-    
+	
     // delivers text output one character at a time at default speed
     private static void typeByChar(String msg) {
 	typeByChar(msg, 1);
@@ -165,14 +180,14 @@ public class GM_HE_LH_YE_ICSSummative {
     public static void main(String[] args) throws IOException {
 	c = new Console("LOVE STORY");
 	
-	// opening dialogue
-	AudioStream introMusic = loadSound("snd/01_INTROBG.wav");
-	AudioPlayer.player.start(introMusic);
-
 	c.setColor(Color.black);
 	c.fillRect(0, 0, c.getWidth(), c.getHeight());
 	c.setTextColor(Color.white);
 	c.setTextBackgroundColor(Color.black);
+	
+	// opening dialogue
+	AudioStream introMusic = loadSound("snd/01_INTROBG.wav");
+	AudioPlayer.player.start(introMusic);
 	
 	parseDialogue("dialogue/01_INTRO.txt");
 	
@@ -197,7 +212,7 @@ public class GM_HE_LH_YE_ICSSummative {
 	c.println("3. HOPEFUL");
 	c.println("4. NERVOUS");
 	
-	int mentalState = awaitDigitRange(4);
+	int mentalState = awaitDigitRange(4, "snd/02_LAUGH.wav");
 	
 	wait(1000);
 	typeByChar("Very good.", "snd/02_BEEP.wav");
@@ -245,10 +260,12 @@ public class GM_HE_LH_YE_ICSSummative {
 	parseDialogue("dialogue/03_DAY1.txt", 2, '\n');
 	
 	// choice to take sandwich
-	typeByChar("Take the sandwich?", "snd/02_BEEP.wav");
+	c.println();
+	typeByChar("Take the sandwich?\n", "snd/02_BEEP.wav");
 	c.println("1. Bring it to school");
 	c.println("2. Leave it behind");
-	int choice = awaitDigitRange(2);
+	c.println();
+	int choice = awaitDigitRange(2, "snd/03_LAUGH.wav");
 	
 	if (choice == 1) {
 	    player.addKarma(2);
