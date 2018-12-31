@@ -21,11 +21,14 @@ public class Player {
     private int storyline;
     
     // stats
-    private int charm;
-    private int intelligence;
-    private int karma;
-    private int strength;
+    private int charm = 0;
+    private int intelligence = 0;
+    private int karma = 0;
+    private int strength = 0;
     private int money;
+    
+    // decisions
+    public boolean hasSandwich;
     
     public void addCharm(int gain) {
 	this.charm += gain;
