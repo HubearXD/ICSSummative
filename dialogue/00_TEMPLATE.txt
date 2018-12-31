@@ -1,0 +1,7 @@
+. Lines preceded by a single period and a space are printed normally,
+. but by default,
+the absence of line formatting prefixes leads to normal printing.
+> Lines preceded by the greater-than sign are printed one character at at time.
+^
+Carets denote delayed line breaks.
+All instances of a lowercase p within square brackets are replaced with the protagonist's name: [p].
