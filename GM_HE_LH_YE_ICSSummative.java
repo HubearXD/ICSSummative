@@ -196,8 +196,7 @@ public class GM_HE_LH_YE_ICSSummative {
 
 	// mental state selection, which affects story
 	c.println();
-	typeByChar("How is your little buddy feeling today?\n",
-	    "snd/02_BEEP.wav");
+	c.println("How is your little buddy feeling today?");
 	c.println("1. LOVED");
 	c.println("2. DEPRESSED");
 	c.println("3. HOPEFUL");
@@ -205,7 +204,7 @@ public class GM_HE_LH_YE_ICSSummative {
 	int mentalState = awaitDigitRange(4);
 	
 	typeByChar("Very good.", "snd/02_BEEP.wav");
-	wait(3000);
+	wait(2000);
 	c.clear();
 
 	// creates Player instance for the protagonist character
@@ -249,7 +248,7 @@ public class GM_HE_LH_YE_ICSSummative {
 	
 	// choice to take sandwich
 	c.println();
-	typeByChar("Take the sandwich?\n", 2, "snd/02_BEEP.wav");
+	c.println("Take the sandwich?");
 	c.println("1. Bring it to school");
 	c.println("2. Leave it behind");
 	c.println();
@@ -277,14 +276,13 @@ public class GM_HE_LH_YE_ICSSummative {
 	
 	// schoolyard
 	c.clear();
-	for (int day = 1;; day++) {
-	    
-	    typeByChar("What do you do?\n", 2, "snd/02_BEEP.wav");
+	for (int day = 1; day < 200; day++) {
 	    int schoolyardChoice;
 	    do {
 		c.println("DAY " + day + ": " + WEEK[(day - 1) % 5]);
 		c.println("8:30 a.m.");
 		c.println();
+		typeByChar("What do you do?\n", 2, "snd/02_BEEP.wav");
 		c.println("1. Talk to Ivy");
 		c.println("2. Talk to Kate");
 		c.println("3. Talk to Miranda");
@@ -293,6 +291,7 @@ public class GM_HE_LH_YE_ICSSummative {
 		schoolyardChoice = awaitDigitRange(5);
 		
 		// dialogues with girls
+		// TODO: all positive responses
 		c.println();
 		switch (schoolyardChoice) {
 		    case 1: // Ivy
@@ -303,7 +302,7 @@ public class GM_HE_LH_YE_ICSSummative {
 			    // positive response
 			} else {
 			    typeByChar("Ivy: There's no 'I' in team, nor is "
-			    + "there a 'u' in \"relationship\"!", 2,
+			    + "there a 'u' in \"relationship\"!\n", 2,
 			    "snd/02_BEEP.wav", '\n');
 			    typeByChar("Looks like I need to get more charm, "
 			    + "brains, and brawn before I can approach her.",
@@ -328,8 +327,11 @@ public class GM_HE_LH_YE_ICSSummative {
 				+ "at yourself, dwarf. Think ANY girl would "
 				+ "want to be with you? Make sure you can "
 				+ "look at a mirror without breaking it "
-				+ "before you punish her eyes like this!"
+				+ "before you punish her eyes like that!"
 				+ "\"\n", 2, "snd/02_BEEP.wav", '\n');
+			    typeByChar("No matter if it's by fraud or by "
+				+ "force, I've gotta get that jock away from "
+				+ "from her.", 2, "snd/02_BEEP.wav", '\n');
 			}
 			break;
 		    case 3: // Miranda
@@ -345,7 +347,7 @@ public class GM_HE_LH_YE_ICSSummative {
 				+ "AIME. Talk to me when you score perfect "
 				+ "on AMC 12.\"\n", 2, "snd/02_BEEP.wav",
 				'\n');
-			    typeByChar("Me: \"Okay then.\"\n", 2,
+			    typeByChar("Me: \"Okay then.\"", 2,
 				"snd/02_BEEP.wav", '\n');
 			}
 			break;
@@ -361,7 +363,7 @@ public class GM_HE_LH_YE_ICSSummative {
 				"snd/02_BEEP.wav", '\n');
 			    typeByChar("Looks like I need to catch her "
 				+ "attention and get on her good side "
-				+ "somehow. Do I need more looks?\n", 2,
+				+ "somehow. Do I need more looks?", 2,
 				"snd/02_BEEP.wav", '\n');
 			}
 			break;
@@ -370,6 +372,44 @@ public class GM_HE_LH_YE_ICSSummative {
 	    } while (schoolyardChoice != 5);
 	    
 	    // school morning
+	    c.clear();
+	    c.println("DAY " + day + ": " + WEEK[(day - 1) % 5]);
+	    c.println("9:00 a.m.");
+	    
+	    boolean wentToClass = false;
+	    
+	    // hall monitor encounter on the first day
+	    if (day == 1) {
+		c.println();
+		typeByChar("It's time for civics, but civics is a boring "
+		    + "class. Should I skip it? I see a hall monitor "
+		    + "coming. Gotta think fast!\n", 2, "snd/02_BEEP.wav",
+		    '\n' );
+		c.println();
+		c.println("What should you do?");
+		c.println("1. Go to class");
+		c.println("2. Avoid class");
+		c.println();
+		int hallwayChoice = awaitDigitRange(2);
+		
+		if (hallwayChoice == 1) {
+		    player.addKarma(10);
+		    player.addIntelligence(10);
+		    c.println("+10 Karma");
+		    c.println("+10 Intelligence");
+		    wentToClass = true;
+		} else {
+		    player.addKarma(-30);
+		    c.println("-30 Karma");
+		    c.println();
+		}
+		
+	    }
+	    
+	    int hoursPassed = 0;
+	    while (!wentToClass && hoursPassed < 3) {
+		// TODO: morning activities
+	    }
 	    c.clear();
 	}
     }

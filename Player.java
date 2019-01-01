@@ -30,20 +30,35 @@ public class Player {
     // decisions
     public boolean hasSandwich;
     
+    // stat modifiers
+    // only karma can drop below 0
     public void addCharm(int gain) {
-	this.charm += gain;
+	if (this.charm + gain < 0) {
+	    this.charm = 0;
+	} else {
+	    this.charm += gain;
+	}
     }
     
     public void addIntelligence(int gain) {
-	this.intelligence += gain;
+	if (this.intelligence + gain < 0) {
+	    this.intelligence = 0;
+	} else {
+	    this.intelligence += gain;
+	}
     }
     
     public void addKarma(int gain) {
+	// karma can be negative
 	this.karma += gain;
     }
     
     public void addStrength(int gain) {
-	this.strength += gain;
+	if (this.strength + gain < 0) {
+	    this.strength = 0;
+	} else {
+	    this.strength += gain;
+	}
     }
     
     public void addMoney(int gain) {
