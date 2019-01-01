@@ -36,7 +36,7 @@ public class GM_HE_LH_YE_ICSSummative {
 	    return in;
 	}
     }
-	
+    
     // fades to black using progressively darker fullscreen rectangles
     private static void fadeBlack() {
 	for (int i = 255; i >= 0; i--) {
@@ -56,6 +56,68 @@ public class GM_HE_LH_YE_ICSSummative {
 	    wait(15);
 	}
     }
+     
+    private static void libraryActivities(int activity) {
+	switch (activity) {
+	    case 1:
+		int rand = rng(10);
+		if (rand == 1) {
+		    player.addCharm(-5);
+		    player.addIntelligence(15);
+		    c.print("You failed to keep your eyes open while ");
+		    c.println("reading the 3000-page textbook. Shame.");
+		    c.println("-5 Charm");
+		    c.println("+15 Intelligence");
+		} else if (rand <= 3) {
+		    player.addCharm(20);
+		    player.addIntelligence(15);
+		    player.addKarma(30);
+		    c.print("A librarian dropped some books on the floor.");
+		    c.print("You pick them up and receive the title ");
+		    c.println("Helper of the Month.");
+		    c.println("+20 Charm");
+		    c.println("+15 Intelligence");
+		    c.println("+30 Karma");
+		} else {
+		    player.addCharm(30);
+		    player.addIntelligence(30);
+		    player.addKarma(20);
+		    c.print("A girl asked you about quantum physics. You ");
+		    c.print("helped her despite having no idea what you ");
+		    c.println("doing and learned something together.");
+		    c.println("+30 Charm");
+		    c.println("+30 Intelligence");
+		    c.println("+20 Karma");
+		}
+		break;
+	    case 2:
+		typeByChar("She looks busy. Probably a bad time. I'll go "
+		+ "talk to someone else.\n", 2, "snd/02_BEEP.wav", '\n');
+		// fall through to talking with friends
+	    case 3:
+		rand = rng(2);
+		if (rand == 1) {
+		    player.addCharm(-15);
+		    player.addStrength(-10);
+		    typeByChar("Me: \"Oi! Whatcha doin guys?\"\n", 2,
+			    "snd/02_BEEP.wav", '\n');
+		    typeByChar("Shang Gang memeber: Do I know you?\"\n", 2,
+			    "snd/02_BEEP.wav", '\n');
+		    c.print("Turns out those guys weren't your friends ");
+		    c.print("after all. (Do you even have friends?) They ");
+		    c.println("gang up and take you outside.");
+		    c.println("-15 Charm");
+		    c.println("-10 Strength");
+		} else {
+		    player.addCharm(+25);
+		    player.addKarma(-30);
+		    c.print("You and your buddies had a great time, but got ");
+		    c.print("kicked out for having five people at the ");
+		    c.println("table.");
+		}
+		break;
+	}
+    }
     
     // simplifies audio resource imports
     private static AudioStream loadSound(String filePath) {
@@ -66,69 +128,19 @@ public class GM_HE_LH_YE_ICSSummative {
 	}
     }
     
-    // delivers text output one character at a time at default speed
-    private static void typeByChar(String msg) {
-	typeByChar(msg, 1, (char) 0);
-    }
-    
-    // overloaded to allow typing speed adjustment
-    private static void typeByChar(String msg, int speed) {
-	typeByChar(msg, speed, (char) 0);
-    }
-    
-    // overloaded to allow playing sound on text advance
-    private static void typeByChar(String msg, String soundFilePath) {
-	AudioPlayer.player.start(loadSound(soundFilePath));
-	typeByChar(msg, 1, (char) 0);
-    }
-    
-    // overloaded to allow typing speed adjustment
-    // and playing sound on text advance
-    private static void typeByChar(String msg, int speed,
-	    String soundFilePath) {
-	AudioPlayer.player.start(loadSound(soundFilePath));
-	typeByChar(msg, speed, (char) 0);
-    }
-    
-    // overloaded to allow typing speed adjustment and await keypress
-    private static void typeByChar(String msg, int speed, char awaitTarget) {
-	boolean debug = true; // setting true removes typing delay
-	if (debug) {
-	    c.print(msg);
-	} else {
-	    // changes invalid speed values to default
-	    if (speed < 1 || speed > 3) {
-		speed = 1; 
-	    }
-	    
-	    for (int i = 0; i < msg.length(); i++) {
-		char currentChar = msg.charAt(i);
-		c.print(currentChar);
-		wait((currentChar == '\n') ? 500 : (20 / speed));
-	    }
-	}
-	awaitTyping(awaitTarget);
-    }
-	
-    private static void typeByChar(String msg, int speed,
-	    String soundFilePath, char awaitTarget) {
-	AudioPlayer.player.start(loadSound(soundFilePath));
-	typeByChar(msg, speed, awaitTarget);
-    }
-    
     // reads dialogue from TXT files
     private static void parseDialogue(String filePath) throws IOException {
 	parseDialogue(filePath, 1, (char) 0);
     }
     
-    // overloaded to await keypress before advancing to next line
+    // overloaded to awaiting keypress before advancing to next line
     private static void parseDialogue(String filePath, char awaitTarget)
-	throws IOException {
+	    throws IOException {
 	parseDialogue(filePath, 1, awaitTarget);
     }
     
-    // overloaded to adjust typing speed and await keypress before
-    // advancing to next line
+    // overloaded to allow typing speed adjustment
+    // and awaiting keypress before advancing to next line
     private static void parseDialogue(String filePath, int charSpeed,
 	    char awaitTarget) throws IOException {
 	BufferedReader br = new BufferedReader(new FileReader(filePath));
@@ -158,6 +170,62 @@ public class GM_HE_LH_YE_ICSSummative {
 	}
     }
     
+    private static int rng(int max) {
+	return (int) (Math.random() * max) + 1;
+    }
+	
+    // delivers text output one character at a time at default speed
+    private static void typeByChar(String msg) {
+	typeByChar(msg, 1, (char) 0);
+    }
+    
+    // overloaded to allow typing speed adjustment
+    private static void typeByChar(String msg, int speed) {
+	typeByChar(msg, speed, (char) 0);
+    }
+    
+    // overloaded to allow playing sound on text advance
+    private static void typeByChar(String msg, String soundFilePath) {
+	AudioPlayer.player.start(loadSound(soundFilePath));
+	typeByChar(msg, 1, (char) 0);
+    }
+    
+    // overloaded to allow typing speed adjustment
+    // and playing sound on text advance
+    private static void typeByChar(String msg, int speed,
+	    String soundFilePath) {
+	AudioPlayer.player.start(loadSound(soundFilePath));
+	typeByChar(msg, speed, (char) 0);
+    }
+    
+    // overloaded to allow typing speed adjustment and awaiting keypress
+    private static void typeByChar(String msg, int speed, char awaitTarget) {
+	boolean debug = true; // setting true removes typing delay
+	if (debug) {
+	    c.print(msg);
+	} else {
+	    // changes invalid speed values to default
+	    if (speed < 1 || speed > 3) {
+		speed = 1; 
+	    }
+	    
+	    for (int i = 0; i < msg.length(); i++) {
+		char currentChar = msg.charAt(i);
+		c.print(currentChar);
+		wait((currentChar == '\n') ? 500 : (20 / speed));
+	    }
+	}
+	awaitTyping(awaitTarget);
+    }
+    
+    // overloaded to allow typing speed adjustment,
+    // playing sound, and awaiting keypress
+    private static void typeByChar(String msg, int speed,
+	    String soundFilePath, char awaitTarget) {
+	AudioPlayer.player.start(loadSound(soundFilePath));
+	typeByChar(msg, speed, awaitTarget);
+    }
+       
     // pauses the threads
     private static void wait(int delay) {
 	try {
@@ -282,6 +350,9 @@ public class GM_HE_LH_YE_ICSSummative {
 		c.println("DAY " + day + ": " + WEEK[(day - 1) % 5]);
 		c.println("8:30 a.m.");
 		c.println();
+		
+		// TODO-GUI: this choice to be replaced with
+		// interactive user movement
 		typeByChar("What do you do?\n", 2, "snd/02_BEEP.wav");
 		c.println("1. Talk to Ivy");
 		c.println("2. Talk to Kate");
@@ -290,7 +361,7 @@ public class GM_HE_LH_YE_ICSSummative {
 		c.println("5. Go inside");
 		schoolyardChoice = awaitDigitRange(5);
 		
-		// dialogues with girls
+		// girls' dialogues
 		// TODO: all positive responses
 		c.println();
 		switch (schoolyardChoice) {
@@ -408,7 +479,51 @@ public class GM_HE_LH_YE_ICSSummative {
 	    
 	    int hoursPassed = 0;
 	    while (!wentToClass && hoursPassed < 3) {
-		// TODO: morning activities
+		c.clear();
+		c.println("DAY " + day + ": " + WEEK[(day - 1) % 5]);
+		c.println((9 + hoursPassed) + ":00 a.m.");
+		
+		// TODO-GUI: this choice to be replaced with
+		// interactive user movement
+		c.println("Where do you want to go?");
+		c.println("1. Classroom");
+		c.println("2. Library");
+		c.println("3. Weight room");
+		c.println("4. Gymnasium");
+		c.println();
+		int hallwayChoice = awaitDigitRange(4);
+		
+		switch (hallwayChoice) {
+		    case 1: // go to class
+			player.addKarma(10);
+			typeByChar("Changed my mind. I should go to class.\n",
+				2, "snd/02_BEEP.wav", '\n');
+			typeByChar("Me: \"Sorry I'm late.\"\n", 2,
+				"snd/02_BEEP.wav", '\n');
+			c.println("+10 Karma");
+			wentToClass = true;
+			break;
+		    case 2: // library
+			c.println("It's study time.");
+			c.println("1. Study alone");
+			c.println("2. Study with friends");
+			c.println("3. Study with Miranda");
+			c.println();
+			libraryActivities(awaitDigitRange(3));
+			awaitTyping("\n");
+			break;
+		    case 3: // weight room
+			typeByChar("Is that Tiffany? Guess she's into beefy "
+			+ "guys\n", 2, "snd/02_BEEP.wav", '\n');
+			c.println("1. Enter the weight room");
+			c.println("2. Approach Tiffany");
+			c.println();
+			awaitDigitRange(2); // TODO: program scenarios
+			awaitTyping("\n");
+			break;
+		    case 4: // gymnasium
+			break;
+		}
 	    }
 	    c.clear();
 	}
