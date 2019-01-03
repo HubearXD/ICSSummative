@@ -66,7 +66,11 @@ public class GM_HE_LH_YE_ICSSummative {
     // handles library scenarios
     private static void libraryActivities(int activity) {
 	switch (activity) {
-	    case 1:
+	    case 1: // study alone
+		typeByChar("I pull out a textbook from my bag. It reads: "
+			   + "\"Quantum Physics for the Mentally "
+			   + "Uncertain\". Three pages in, my eyelids begin "
+			   + "to fall. Then I'm out cold.\n", BEEP, '\n');
 		int rand = rng(10);
 		if (rand == 1) {
 		    player.addCharm(-5);
@@ -75,15 +79,15 @@ public class GM_HE_LH_YE_ICSSummative {
 		    c.println("reading the 3000-page textbook. Shame.");
 		    c.println("-5 Charm");
 		    c.println("+15 Intelligence");
-		} else if (rand <= 3) {
+		} else if (rand > 1 && rand <= 3) {
 		    player.addCharm(20);
-		    player.addIntelligence(15);
+		    player.addStrength(5);
 		    player.addKarma(30);
 		    c.print("A librarian dropped some books on the floor. ");
 		    c.print("You pick them up and receive the title ");
 		    c.println("Helper of the Month.");
 		    c.println("+20 Charm");
-		    c.println("+15 Intelligence");
+		    c.println("+5 Strength");
 		    c.println("+30 Karma");
 		} else {
 		    player.addCharm(30);
@@ -97,11 +101,11 @@ public class GM_HE_LH_YE_ICSSummative {
 		    c.println("+20 Karma");
 		}
 		break;
-	    case 2:
+	    case 2: // study with Miranda
 		typeByChar("She looks busy. Probably a bad time. I'll go "
 		+ "talk to someone else.\n", BEEP, '\n');
-		// fall through to talking with friends
-	    case 3:
+		// fall through and talk with friends
+	    case 3: // study with friends
 		rand = rng(2);
 		if (rand == 1) {
 		    player.addCharm(-15);
@@ -121,11 +125,13 @@ public class GM_HE_LH_YE_ICSSummative {
 		    c.print("You and your buddies had a great time, but ");
 		    c.print("got kicked out for having five people at the ");
 		    c.println("table.");
+		    c.println("+25 Charm");
+		    c.println("-30 Karma");
 		}
 		break;
 	}
     }
-    
+	
     // simplifies audio resource imports
     private static AudioStream loadSound(String filePath) {
 	try {
@@ -218,9 +224,51 @@ public class GM_HE_LH_YE_ICSSummative {
 	}
     }
     
+    // handles weight room scenarios
+    private static void weightRoomActivities() {
+	int rand = rng(10);
+	if (rand == 1) {
+	    player.addCharm(30);
+	    player.addStrength(40);
+	    c.print("You went on a binge, crushing all the equipment in ");
+	    c.println("the weight room. (What a god!)");
+	    c.println("+30 Charm");
+	    c.println("+40 Strength");
+	} else if (rand >= 2 && rand <= 3){
+	    player.addCharm(-10);
+	    player.addKarma(-5);
+	    player.addStrength(10);
+	    c.print("You tried to bench more than you could lift. Some ");
+	    c.print("nearby girls noticed and laughed at your failed ");
+	    c.println("attempt.");
+	    c.println("-10 Charm");
+	    c.println("-5 Karma");
+	    c.println("+10 Strength");
+	} else if (rand >= 4 && rand <= 6) {
+	    player.addCharm(20);
+	    player.addKarma(20);
+	    player.addStrength(30);
+	    c.print("You completed 40 push-ups in a row. Working out has ");
+	    c.println("steadily improved your capabilities.");
+	    c.println("+20 Charm");
+	    c.println("+20 Karma");
+	    c.println("+30 Strength");
+	} else {
+	    player.addCharm(15);
+	    player.addKarma(10);
+	    player.addStrength(15);
+	    c.print("The gym instructor was tired and needed help. You ");
+	    c.println("put away your dumbbells to help him out.");
+	    c.println("+15 Charm"); 
+	    c.println("+10 Karma");
+	    c.println("+15 Strength");
+	}
+    }
+    
     public static void main(String[] args) throws IOException {
 	c = new Console("LOVE STORY");
 	
+	// customize console
 	c.setColor(Color.black);
 	c.fillRect(0, 0, c.getWidth(), c.getHeight());
 	c.setTextColor(Color.white);
@@ -236,7 +284,7 @@ public class GM_HE_LH_YE_ICSSummative {
 	c.print("What is your name? ");
 	String name = c.readString();
 	typeByChar("What do you look like?\n", BEEP);
-	c.print("Your hair colour? ");
+	c.println("Your hair colour? ");
 	c.readString();
 	c.print("Eye colour? ");
 	c.readString();
@@ -319,8 +367,7 @@ public class GM_HE_LH_YE_ICSSummative {
 	awaitTyping('\n');
 	
 	c.println();
-	typeByChar("Me: \"Bye Mom, bye Dad, I'm leaving!\"",
-	    BEEP, '\n');
+	typeByChar("Me: \"Bye Mom, bye Dad, I'm leaving!\"", BEEP, '\n');
 	fadeBlack();
 	
 	// schoolyard
@@ -334,7 +381,7 @@ public class GM_HE_LH_YE_ICSSummative {
 		
 		// TODO-GUI: this choice to be replaced with
 		// interactive user movement
-		typeByChar("What do you do?\n", BEEP);
+		c.println("What do you do?");
 		c.println("1. Talk to Ivy");
 		c.println("2. Talk to Kate");
 		c.println("3. Talk to Miranda");
@@ -371,6 +418,7 @@ public class GM_HE_LH_YE_ICSSummative {
 				+ "to talk to her.\n", '\n');
 			    typeByChar("Me: \"Hey, cutie, the name's Conner. "
 				+ "What's yours?.\"\n", BEEP, '\n');
+			    c.println("You got cock-blocked by a Tall Jock.");
 			    typeByChar("Raian: \"HEY LITTLE BRAT! You're way "
 				+ "too wimpy and weak to talk to Kate! Look "
 				+ "at yourself, dwarf. Think ANY girl would "
@@ -426,7 +474,7 @@ public class GM_HE_LH_YE_ICSSummative {
 		c.println();
 		typeByChar("It's time for civics, but civics is a boring "
 		    + "class. Should I skip it? I see a hall monitor "
-		    + "coming. Gotta think fast!\n", BEEP, '\n');
+		    + "coming. Gotta think fast!\n", '\n');
 		c.println();
 		c.println("What should you do?");
 		c.println("1. Go to class");
@@ -484,12 +532,28 @@ public class GM_HE_LH_YE_ICSSummative {
 		    case 3: // weight room
 			typeByChar("Is that Tiffany? Guess she's into beefy "
 			+ "guys.\n", BEEP, '\n');
-			c.println("1. Enter the weight room");
-			c.println("2. Approach Tiffany");
+			c.println("1. Approach Tiffany");
+			c.println("2. Enter the weight room");
 			c.println();
-			// TODO: program weight room scenarios
-			awaitDigitRange(2, BEEP);
-			awaitTyping('\n');
+			
+			if (awaitDigitRange(2, BEEP) == 1) {
+			    typeByChar("Me: \"Hey Tiffany! Wanna work out "
+			    + "together?\"\n", '\n');
+			    typeByChar("Tiffany: \"Ew, no, what's a loser "
+			    + "like you doing here?\"\n", BEEP, '\n');
+			}
+			
+			c.print("You walk past Tiffany and enter the ");
+			c.println("weight room.");
+			c.println();
+			c.println("What do you do now?");
+			c.println("1. Work out");
+			c.println("2. Leave");
+			
+			if (awaitDigitRange(2, BEEP) == 1) {
+			    weightRoomActivities();
+			    awaitTyping('\n');
+			}
 			break;
 		    case 4: // gymnasium
 			break;
