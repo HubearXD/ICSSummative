@@ -44,7 +44,7 @@ public class GM_HE_LH_YE_ICSSummative {
 	    return in;
 	}
     }
-    
+	
     // fades to black using progressively darker full-screen rectangles
     private static void fadeBlack() {
 	for (int i = 255; i >= 0; i--) {
@@ -62,6 +62,54 @@ public class GM_HE_LH_YE_ICSSummative {
 	    c.setColor(bg);
 	    c.fillRect(0, 0, c.getWidth(), c.getHeight());
 	    wait(15);
+	}
+    }
+    
+    // handles gymnasium scenarios
+    private static void gymActivities(int activity) {
+	if (activity == 1) { // play basketball
+	    int rand = rng(20);
+	    if (rand <= 2) {
+		player.addCharm(30);
+		player.addIntelligence(10);
+		player.addStrength(25);
+		c.print("You swept the other team, scoring you points with ");
+		c.println("the ladies in the bleachers.");
+		AudioPlayer.player.start(loadSound(STAT));
+		c.println("+30 Charm");
+		c.println("+10 Intelligence");
+		c.println("+25 Strength");
+	    } else if (rand > 2 && rand <= 5) {
+		player.addCharm(-10);
+		player.addKarma(-10);
+		player.addIntelligence(-20);
+		c.print("You fouled a player. Would've been fine, but he ");
+		c.println("was your own teammate.");
+		AudioPlayer.player.start(loadSound(STAT));
+		c.println("-10 Charm");
+		c.println("-10 Karma");
+		c.println("-20 Intelligence");
+	    } else if (rand > 5 && rand <= 10) {
+		player.addCharm(20);
+		player.addStrength(20);
+		c.print("You dunked the ball. (How? You're like four feet ");
+		c.println("tall!)");
+		AudioPlayer.player.start(loadSound(STAT));
+		c.println("+20 Charm");
+		c.println("+20 Strength");
+	    } else {
+		player.addCharm(10);
+		player.addStrength(10);
+		c.println("You played some ball with the boys.");
+		AudioPlayer.player.start(loadSound(STAT));
+		c.println("+10 Charm");
+		c.println("+10 Strength");
+	    }
+	} else { // suicides
+	    player.addStrength(1);
+	    c.println("You tortured yourself by running 15 suicides.");
+	    AudioPlayer.player.start(loadSound(STAT));
+	    c.println("+1 Strength");
 	}
     }
     
@@ -183,6 +231,13 @@ public class GM_HE_LH_YE_ICSSummative {
 	}
     }
     
+    // simple random number generator
+    private static int rng(int max) {
+	return (int) (Math.random() * max) + 1;
+    }
+    
+    // free interaction with girls
+    // TODO: create lunch time variation reached through paramater passing
     private static void schoolyardInteraction() {
 	int schoolyardChoice;
 	do {
@@ -201,7 +256,7 @@ public class GM_HE_LH_YE_ICSSummative {
 	    schoolyardChoice = awaitDigitRange(5, BEEP);
 	    
 	    // girls' dialogues
-	    // TODO: all positive responses
+	    // TODO: all quest and taken responses
 	    c.println();
 	    switch (schoolyardChoice) {
 		case 1: // Ivy
@@ -273,12 +328,7 @@ public class GM_HE_LH_YE_ICSSummative {
 	    c.clear();
 	} while (schoolyardChoice != 5);
     }
-    
-    // simple random number generator
-    private static int rng(int max) {
-	return (int) (Math.random() * max) + 1;
-    }
-    
+	
     // delivers text output one character at a time at default speed
     private static void typeByChar(String msg) {
 	typeByChar(msg, (char) 0);
@@ -476,11 +526,12 @@ public class GM_HE_LH_YE_ICSSummative {
 	typeByChar("Me: \"Bye Mom, bye Dad, I'm leaving!\"", BEEP, '\n');
 	fadeBlack();
 	
-	// schoolyard
-	schoolyardInteraction();
-	
+	c.clear();
 	// school day
 	for (int day = 1; day < 200; day++) {
+	    // schoolyard
+	    schoolyardInteraction();
+	    
 	    // school morning
 	    c.clear();
 	    c.println("DAY " + day + ": " + WEEK[(day - 1) % 5]);
@@ -489,26 +540,26 @@ public class GM_HE_LH_YE_ICSSummative {
 	    boolean wentToClass = false;
 	    
 	    // hall monitor encounter on the first day
-	    if (day == 1) {
+	    // random encounters afterwards
+	    if (day == 1 || rng(10) == 1) {
 		c.println();
 		typeByChar("It's time for civics, but civics is a boring "
-		    + "class. Should I skip it? I see a hall monitor "
-		    + "coming. Gotta think fast!\n", '\n');
+			+ "class. Should I skip it? I see a hall monitor "
+			+ "coming. Gotta think fast!\n", '\n');
 		c.println();
 		c.println("What should you do?");
 		c.println("1. Go to class");
 		c.println("2. Avoid class");
 		c.println();
-		int hallwayChoice = awaitDigitRange(2, BEEP);
-
-		if (hallwayChoice == 1) {
+		
+		if (awaitDigitRange(2, BEEP) == 1) { // go to class
 		    player.addKarma(10);
 		    player.addIntelligence(10);
 		    AudioPlayer.player.start(loadSound(STAT));
 		    c.println("+10 Karma");
 		    c.println("+10 Intelligence");
 		    wentToClass = true;
-		} else {
+		} else { // avoid class
 		    player.addKarma(-30);
 		    AudioPlayer.player.start(loadSound(STAT));
 		    c.println("-30 Karma");
@@ -533,6 +584,8 @@ public class GM_HE_LH_YE_ICSSummative {
 		c.println();
 		int hallwayChoice = awaitDigitRange(5, BEEP);
 		
+		// flag only allow suicides to be ran once a day
+		boolean ranSuicides = false;
 		switch (hallwayChoice) {
 		    case 1: // go to class
 			player.addKarma(10);
@@ -580,7 +633,22 @@ public class GM_HE_LH_YE_ICSSummative {
 			}
 			break;
 		    case 4: // gymnasium
-			// TODO: Program gymnasium activities
+			typeByChar("Basketball player: \"Move aside! You  "
+				+ "get trampled?\"\n", '\n');
+			c.println();
+			c.println("What do you want to do here?");
+			c.println("1. Play basketball");
+			c.println("2. Do suicides");
+			c.println();
+			int gymChoice = awaitDigitRange(2, BEEP);
+			
+			if (ranSuicides && gymChoice == 2) {
+			    typeByChar("I've had enough for today.");
+			    gymActivities(1);
+			} else {
+			    gymActivities(gymChoice);
+			}
+			awaitTyping('\n');
 			break;
 		    case 5: // stairwell
 			typeByChar("I bust in on a goods trade. Raian "
@@ -590,9 +658,6 @@ public class GM_HE_LH_YE_ICSSummative {
 			break;
 		}
 	    }
-	    
-	    // lunch time
-	    schoolyardInteraction();
 	    c.clear();
 	}
     }

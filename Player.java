@@ -7,7 +7,6 @@ public class Player {
 	// 2. Depressed: Long lost bank account rediscovered
 	// 3. Hopeful: Work hard and receive a major bonus
 	// 4. Nervous: Get buff and earn a well-paying movie contract
-	
 	this.ending = mentalState;
     }
     
@@ -64,6 +63,7 @@ public class Player {
     }
     
     public void addMoney(int gain) {
+	// player may accrue debt
 	this.money += gain;
     }
     
