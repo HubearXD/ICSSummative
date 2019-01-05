@@ -7,7 +7,11 @@ import sun.audio.AudioStream;
 
 public class GM_HE_LH_YE_ICSSummative {
     private final static String BEEP = "snd/02_BEEP.wav"; // beep file path
-    private final static String STAT = "snd/05_STATCHANGE.wav"; // stat change
+    private final static boolean MORNING = true; // paramater value for
+						 // mornings
+    private final static boolean AFTERNOON = false; // paramater value for
+						    // afternoons
+    private final static String STAT = "snd/05_STATCHANGE.wav"; // stat sound
 								// file path 
     private final static String WEEK[] = {"MONDAY", "TUESDAY", "WEDNESDAY",
 					  "THURSDAY", "FRIDAY"};
@@ -237,12 +241,15 @@ public class GM_HE_LH_YE_ICSSummative {
     }
     
     // free interaction with girls
-    // TODO: create lunch time variation reached through paramater passing
-    private static void schoolyardInteraction() {
+    private static void schoolyardInteraction(boolean isMorning) {
 	int schoolyardChoice;
 	do {
 	    c.println("DAY " + day + ": " + WEEK[(day - 1) % 5]);
-	    c.println("8:30 a.m.");
+	    if (isMorning == MORNING) {
+		c.println("8:30 a.m.");
+	    } else {
+		c.println("12:00 p.m.");
+	    }
 	    c.println();
 	    
 	    // TODO-GUI: this choice to be replaced with
@@ -292,7 +299,7 @@ public class GM_HE_LH_YE_ICSSummative {
 				+ "look at a mirror without breaking it "
 				+ "before you punish her eyes like that!"
 				+ "\"\n", BEEP, '\n');
-			    typeByChar("No matter if it's by fraud or by "
+			typeByChar("No matter if it's by fraud or by "
 				+ "force, I've gotta get that jock away from "
 				+ "from her.", BEEP, '\n');
 			}
@@ -510,7 +517,7 @@ public class GM_HE_LH_YE_ICSSummative {
 	if (sandwichChoice == 1) {
 	    player.addKarma(20);
 	    player.hasSandwich = true;
-	    c.println("You got an item: CRUSTY SANDWICH.");
+	    c.println("You got a CRUSTY SANDWICH.");
 	    AudioPlayer.player.start(loadSound(STAT));
 	    c.println("+20 Karma");
 	} else {
@@ -526,11 +533,12 @@ public class GM_HE_LH_YE_ICSSummative {
 	typeByChar("Me: \"Bye Mom, bye Dad, I'm leaving!\"", BEEP, '\n');
 	fadeBlack();
 	
-	c.clear();
 	// school day
-	for (int day = 1; day < 200; day++) {
+	// game over on day 200 as everyone graduates
+	c.clear();
+	for (; day <= 200; day++) {
 	    // schoolyard
-	    schoolyardInteraction();
+	    schoolyardInteraction(MORNING);
 	    
 	    // school morning
 	    c.clear();
@@ -568,6 +576,10 @@ public class GM_HE_LH_YE_ICSSummative {
 		awaitTyping('\n');
 	    }
 	    
+	    // flag only allow suicides to be ran once a day
+	    boolean ranSuicides = false;
+	    
+	    // morning activities
 	    for (int hours = 0; !wentToClass && hours < 3; hours++) {
 		c.clear();
 		c.println("DAY " + day + ": " + WEEK[(day - 1) % 5]);
@@ -584,8 +596,6 @@ public class GM_HE_LH_YE_ICSSummative {
 		c.println();
 		int hallwayChoice = awaitDigitRange(5, BEEP);
 		
-		// flag only allow suicides to be ran once a day
-		boolean ranSuicides = false;
 		switch (hallwayChoice) {
 		    case 1: // go to class
 			player.addKarma(10);
@@ -634,7 +644,7 @@ public class GM_HE_LH_YE_ICSSummative {
 			break;
 		    case 4: // gymnasium
 			typeByChar("Basketball player: \"Move aside! You  "
-				+ "get trampled?\"\n", '\n');
+				+ "wanna get trampled?\"\n", '\n');
 			c.println();
 			c.println("What do you want to do here?");
 			c.println("1. Play basketball");
