@@ -7,6 +7,8 @@ import sun.audio.AudioStream;
 
 public class GM_HE_LH_YE_ICSSummative {
     private final static String BEEP = "snd/02_BEEP.wav"; // beep file path
+    private final static String STAT = "snd/05_STATCHANGE.wav"; // stat change
+								// file path 
     private final static String WEEK[] = {"MONDAY", "TUESDAY", "WEDNESDAY",
 					  "THURSDAY", "FRIDAY"};
     
@@ -77,6 +79,7 @@ public class GM_HE_LH_YE_ICSSummative {
 		    player.addIntelligence(15);
 		    c.print("You failed to keep your eyes open while ");
 		    c.println("reading the 3000-page textbook. Shame.");
+		    AudioPlayer.player.start(loadSound(STAT));
 		    c.println("-5 Charm");
 		    c.println("+15 Intelligence");
 		} else if (rand > 1 && rand <= 3) {
@@ -86,6 +89,7 @@ public class GM_HE_LH_YE_ICSSummative {
 		    c.print("A librarian dropped some books on the floor. ");
 		    c.print("You pick them up and receive the title ");
 		    c.println("Helper of the Month.");
+		    AudioPlayer.player.start(loadSound(STAT));
 		    c.println("+20 Charm");
 		    c.println("+5 Strength");
 		    c.println("+30 Karma");
@@ -96,6 +100,7 @@ public class GM_HE_LH_YE_ICSSummative {
 		    c.print("A girl asked you about quantum physics. You ");
 		    c.print("helped her despite having no idea what you ");
 		    c.println("doing and learned something together.");
+		    AudioPlayer.player.start(loadSound(STAT));
 		    c.println("+30 Charm");
 		    c.println("+30 Intelligence");
 		    c.println("+20 Karma");
@@ -117,6 +122,7 @@ public class GM_HE_LH_YE_ICSSummative {
 		    c.print("Turns out those guys weren't your friends ");
 		    c.print("after all. (Do you even have friends?) They ");
 		    c.println("gang up and take you outside.");
+		    AudioPlayer.player.start(loadSound(STAT));
 		    c.println("-15 Charm");
 		    c.println("-10 Strength");
 		} else {
@@ -125,6 +131,7 @@ public class GM_HE_LH_YE_ICSSummative {
 		    c.print("You and your buddies had a great time, but ");
 		    c.print("got kicked out for having five people at the ");
 		    c.println("table.");
+		    AudioPlayer.player.start(loadSound(STAT));
 		    c.println("+25 Charm");
 		    c.println("-30 Karma");
 		}
@@ -176,16 +183,107 @@ public class GM_HE_LH_YE_ICSSummative {
 	}
     }
     
+    private static void schoolyardInteraction() {
+	int schoolyardChoice;
+	do {
+	    c.println("DAY " + day + ": " + WEEK[(day - 1) % 5]);
+	    c.println("8:30 a.m.");
+	    c.println();
+	    
+	    // TODO-GUI: this choice to be replaced with
+	    // interactive user movement
+	    c.println("What do you do?");
+	    c.println("1. Talk to Ivy");
+	    c.println("2. Talk to Kate");
+	    c.println("3. Talk to Miranda");
+	    c.println("4. Talk to Tiffany");
+	    c.println("5. Go inside");
+	    schoolyardChoice = awaitDigitRange(5, BEEP);
+	    
+	    // girls' dialogues
+	    // TODO: all positive responses
+	    c.println();
+	    switch (schoolyardChoice) {
+		case 1: // Ivy
+		    if (player.getCharm() >= 80
+			&& player.getIntelligence() >= 60
+			&& player.getKarma() <= -150
+			&& player.getStrength() >= 30) {
+			// positive response
+		    } else {
+			typeByChar("Ivy: There's no 'I' in team, nor is "
+				+ "there a 'u' in \"relationship\"!\n", '\n');
+			typeByChar("Looks like I need to get more charm, "
+				+ "brains, and brawn before I can approach "
+				+ "her.", BEEP, '\n');
+		    }
+		    break;
+		case 2: // Kate
+		    if (player.getCharm() >= 80
+			&& player.getIntelligence() >= 30
+			&& player.getKarma() >= 50
+			&& player.getStrength() >= 50) {
+			// positive response
+		    } else {
+			typeByChar("She's MY type: cute. I'm gonna try "
+				+ "to talk to her.\n", '\n');
+			typeByChar("Me: \"Hey, cutie, the name's Conner. "
+			       + "What's yours?.\"\n", BEEP, '\n');
+			c.println("You got cock-blocked by a tall jock.");
+			typeByChar("Raian: \"HEY LITTLE BRAT! You're way "
+				+ "too wimpy and weak to talk to Kate! Look "
+				+ "at yourself, dwarf. Think ANY girl would "
+				+ "want to be with you? Make sure you can "
+				+ "look at a mirror without breaking it "
+				+ "before you punish her eyes like that!"
+				+ "\"\n", BEEP, '\n');
+			    typeByChar("No matter if it's by fraud or by "
+				+ "force, I've gotta get that jock away from "
+				+ "from her.", BEEP, '\n');
+			}
+		    break;
+		case 3: // Miranda
+		    if (player.getCharm() >= 80
+			&& player.getIntelligence() >= 100
+			&& player.getStrength() >= 30) {
+			// positive response
+		    } else {
+			typeByChar("Me: \"Hey hottie, what are you "
+				+ "looking at?\"\n", '\n');
+			typeByChar("Miranda: \"Go away, I'm studying for "
+				+ "AIME. Talk to me when you score perfect "
+				+ "on AMC 12.\"\n", BEEP, '\n');
+			typeByChar("Me: \"Okay then.\"", BEEP, '\n');
+		    }
+		    break;
+		case 4: // Tiffany
+		    if (player.getCharm() >= 40
+			&& player.getIntelligence() >= 40
+			&& player.getKarma() <= -20
+			&& player.getStrength() >= 60) {
+			// positive response
+		    } else {
+			typeByChar("Tiffany: \"Sorry not interested. Who "
+				+ "do you think you are anyway?\"\n", '\n');
+			typeByChar("How am I gonna catch her attention? "
+				+ "Do I need more looks? ", BEEP, '\n');
+			}
+		    break;
+	    }
+	    c.clear();
+	} while (schoolyardChoice != 5);
+    }
+    
     // simple random number generator
     private static int rng(int max) {
 	return (int) (Math.random() * max) + 1;
     }
-	
+    
     // delivers text output one character at a time at default speed
     private static void typeByChar(String msg) {
 	typeByChar(msg, (char) 0);
     }
-	
+    
     // overloaded to allow playing sound on text advance
     private static void typeByChar(String msg, String soundFilePath) {
 	AudioPlayer.player.start(loadSound(soundFilePath));
@@ -220,7 +318,7 @@ public class GM_HE_LH_YE_ICSSummative {
 	try {
 	    Thread.sleep(delay);
 	} catch (InterruptedException ie) {
-	    // do nothing
+	    ie.printStackTrace();
 	}
     }
     
@@ -232,6 +330,7 @@ public class GM_HE_LH_YE_ICSSummative {
 	    player.addStrength(40);
 	    c.print("You went on a binge, crushing all the equipment in ");
 	    c.println("the weight room. (What a god!)");
+	    AudioPlayer.player.start(loadSound(STAT));
 	    c.println("+30 Charm");
 	    c.println("+40 Strength");
 	} else if (rand >= 2 && rand <= 3){
@@ -241,6 +340,7 @@ public class GM_HE_LH_YE_ICSSummative {
 	    c.print("You tried to bench more than you could lift. Some ");
 	    c.print("nearby girls noticed and laughed at your failed ");
 	    c.println("attempt.");
+	    AudioPlayer.player.start(loadSound(STAT));
 	    c.println("-10 Charm");
 	    c.println("-5 Karma");
 	    c.println("+10 Strength");
@@ -250,6 +350,7 @@ public class GM_HE_LH_YE_ICSSummative {
 	    player.addStrength(30);
 	    c.print("You completed 40 push-ups in a row. Working out has ");
 	    c.println("steadily improved your capabilities.");
+	    AudioPlayer.player.start(loadSound(STAT));
 	    c.println("+20 Charm");
 	    c.println("+20 Karma");
 	    c.println("+30 Strength");
@@ -259,6 +360,7 @@ public class GM_HE_LH_YE_ICSSummative {
 	    player.addStrength(15);
 	    c.print("The gym instructor was tired and needed help. You ");
 	    c.println("put away your dumbbells to help him out.");
+	    AudioPlayer.player.start(loadSound(STAT));
 	    c.println("+15 Charm"); 
 	    c.println("+10 Karma");
 	    c.println("+15 Strength");
@@ -284,7 +386,7 @@ public class GM_HE_LH_YE_ICSSummative {
 	c.print("What is your name? ");
 	String name = c.readString();
 	typeByChar("What do you look like?\n", BEEP);
-	c.println("Your hair colour? ");
+	c.print("Your hair colour? ");
 	c.readString();
 	c.print("Eye colour? ");
 	c.readString();
@@ -311,10 +413,13 @@ public class GM_HE_LH_YE_ICSSummative {
 	
 	// second part of introduction
 	parseDialogue("dialogue/02_INTRO.txt");
+	AudioPlayer.player.stop(introMusic);
 	
 	wait(2000);
 	AudioStream laugh = loadSound("snd/03_LAUGH.wav");
 	AudioPlayer.player.start(laugh);
+	typeByChar("NO ONE GETS TO CHOOSE WHO THEY ARE IN THIS WORLD!\n",
+		BEEP);
 	
 	if (!name.equalsIgnoreCase("Conner")) {
 	    typeByChar("Y O U R   N A M E  I S . . .");
@@ -334,7 +439,6 @@ public class GM_HE_LH_YE_ICSSummative {
 	}
 	
 	c.clear();
-	AudioPlayer.player.stop(introMusic);
 	AudioPlayer.player.stop(laugh);
 	c.setColor(Color.black);
 	c.fillRect(0, 0, c.getWidth(), c.getHeight());
@@ -357,11 +461,13 @@ public class GM_HE_LH_YE_ICSSummative {
 	    player.addKarma(20);
 	    player.hasSandwich = true;
 	    c.println("You got an item: CRUSTY SANDWICH.");
+	    AudioPlayer.player.start(loadSound(STAT));
 	    c.println("+20 Karma");
 	} else {
 	    player.addKarma(-20);
 	    player.hasSandwich = false;
 	    c.println("You left the sandwich alone.");
+	    AudioPlayer.player.start(loadSound(STAT));
 	    c.println("-20 Karma");
 	}
 	awaitTyping('\n');
@@ -371,97 +477,10 @@ public class GM_HE_LH_YE_ICSSummative {
 	fadeBlack();
 	
 	// schoolyard
-	c.clear();
+	schoolyardInteraction();
+	
+	// school day
 	for (int day = 1; day < 200; day++) {
-	    int schoolyardChoice;
-	    do {
-		c.println("DAY " + day + ": " + WEEK[(day - 1) % 5]);
-		c.println("8:30 a.m.");
-		c.println();
-		
-		// TODO-GUI: this choice to be replaced with
-		// interactive user movement
-		c.println("What do you do?");
-		c.println("1. Talk to Ivy");
-		c.println("2. Talk to Kate");
-		c.println("3. Talk to Miranda");
-		c.println("4. Talk to Tiffany");
-		c.println("5. Go inside");
-		schoolyardChoice = awaitDigitRange(5, BEEP);
-		
-		// girls' dialogues
-		// TODO: all positive responses
-		c.println();
-		switch (schoolyardChoice) {
-		    case 1: // Ivy
-			if (player.getCharm() >= 80
-			    && player.getIntelligence() >= 60
-			    && player.getKarma() <= -150
-			    && player.getStrength() >= 30) {
-			    // positive response
-			} else {
-			    typeByChar("Ivy: There's no 'I' in team, nor is "
-			    + "there a 'u' in \"relationship\"!\n", '\n');
-			    typeByChar("Looks like I need to get more charm, "
-			    + "brains, and brawn before I can approach her.",
-			    BEEP, '\n');
-			}
-			break;
-		    case 2: // Kate
-			if (player.getCharm() >= 80
-			    && player.getIntelligence() >= 30
-			    && player.getKarma() >= 50
-			    && player.getStrength() >= 100) {
-			    // positive response
-			} else {
-			    typeByChar("She's MY type: cute. I'm gonna try "
-				+ "to talk to her.\n", '\n');
-			    typeByChar("Me: \"Hey, cutie, the name's Conner. "
-				+ "What's yours?.\"\n", BEEP, '\n');
-			    c.println("You got cock-blocked by a Tall Jock.");
-			    typeByChar("Raian: \"HEY LITTLE BRAT! You're way "
-				+ "too wimpy and weak to talk to Kate! Look "
-				+ "at yourself, dwarf. Think ANY girl would "
-				+ "want to be with you? Make sure you can "
-				+ "look at a mirror without breaking it "
-				+ "before you punish her eyes like that!"
-				+ "\"\n", BEEP, '\n');
-			    typeByChar("No matter if it's by fraud or by "
-				+ "force, I've gotta get that jock away from "
-				+ "from her.", BEEP, '\n');
-			}
-			break;
-		    case 3: // Miranda
-			if (player.getCharm() >= 80
-			    && player.getIntelligence() >= 100
-			    && player.getStrength() >= 30) {
-			    // positive response
-			} else {
-			    typeByChar("Me: \"Hey hottie, what are you "
-				+ "looking at?\"\n", '\n');
-			    typeByChar("Miranda: \"Go away, I'm studying for "
-				+ "AIME. Talk to me when you score perfect "
-				+ "on AMC 12.\"\n", BEEP, '\n');
-			    typeByChar("Me: \"Okay then.\"", BEEP, '\n');
-			}
-			break;
-		    case 4: // Tiffany
-			if (player.getCharm() >= 40
-			    && player.getIntelligence() >= 40
-			    && player.getKarma() <= -20
-			    && player.getStrength() >= 60) {
-			    // positive response
-			} else {
-			    typeByChar("Tiffany: \"Sorry not interested. Who "
-				+ "do you think you are anyway?\"\n", '\n');
-			    typeByChar("How am I gonna catch her attention? "
-				+ "Do I need more looks? ", BEEP, '\n');
-			}
-			break;
-		}
-		c.clear();
-	    } while (schoolyardChoice != 5);
-	    
 	    // school morning
 	    c.clear();
 	    c.println("DAY " + day + ": " + WEEK[(day - 1) % 5]);
@@ -481,19 +500,21 @@ public class GM_HE_LH_YE_ICSSummative {
 		c.println("2. Avoid class");
 		c.println();
 		int hallwayChoice = awaitDigitRange(2, BEEP);
-		
+
 		if (hallwayChoice == 1) {
 		    player.addKarma(10);
 		    player.addIntelligence(10);
+		    AudioPlayer.player.start(loadSound(STAT));
 		    c.println("+10 Karma");
 		    c.println("+10 Intelligence");
 		    wentToClass = true;
 		} else {
 		    player.addKarma(-30);
+		    AudioPlayer.player.start(loadSound(STAT));
 		    c.println("-30 Karma");
 		    c.println();
 		}
-		
+		awaitTyping('\n');
 	    }
 	    
 	    for (int hours = 0; !wentToClass && hours < 3; hours++) {
@@ -508,8 +529,9 @@ public class GM_HE_LH_YE_ICSSummative {
 		c.println("2. Library");
 		c.println("3. Weight room");
 		c.println("4. Gymnasium");
+		c.println("5. Stairwell");
 		c.println();
-		int hallwayChoice = awaitDigitRange(4, BEEP);
+		int hallwayChoice = awaitDigitRange(5, BEEP);
 		
 		switch (hallwayChoice) {
 		    case 1: // go to class
@@ -517,6 +539,7 @@ public class GM_HE_LH_YE_ICSSummative {
 			typeByChar("Changed my mind. I should go to class.\n",
 				'\n');
 			typeByChar("Me: \"Sorry I'm late.\"\n", BEEP, '\n');
+			AudioPlayer.player.start(loadSound(STAT));
 			c.println("+10 Karma");
 			wentToClass = true;
 			break;
@@ -531,16 +554,16 @@ public class GM_HE_LH_YE_ICSSummative {
 			break;
 		    case 3: // weight room
 			typeByChar("Is that Tiffany? Guess she's into beefy "
-			+ "guys.\n", BEEP, '\n');
+				+ "guys.\n", '\n');
 			c.println("1. Approach Tiffany");
 			c.println("2. Enter the weight room");
 			c.println();
 			
 			if (awaitDigitRange(2, BEEP) == 1) {
 			    typeByChar("Me: \"Hey Tiffany! Wanna work out "
-			    + "together?\"\n", '\n');
+				    + "together?\"\n", '\n');
 			    typeByChar("Tiffany: \"Ew, no, what's a loser "
-			    + "like you doing here?\"\n", BEEP, '\n');
+				    + "like you doing here?\"\n", BEEP, '\n');
 			}
 			
 			c.print("You walk past Tiffany and enter the ");
@@ -549,6 +572,7 @@ public class GM_HE_LH_YE_ICSSummative {
 			c.println("What do you do now?");
 			c.println("1. Work out");
 			c.println("2. Leave");
+			c.println();
 			
 			if (awaitDigitRange(2, BEEP) == 1) {
 			    weightRoomActivities();
@@ -556,9 +580,19 @@ public class GM_HE_LH_YE_ICSSummative {
 			}
 			break;
 		    case 4: // gymnasium
+			// TODO: Program gymnasium activities
+			break;
+		    case 5: // stairwell
+			typeByChar("I bust in on a goods trade. Raian "
+				+ "spots me and turns to me fuming.\n", '\n');
+			typeByChar("Raian: Get outta here, runt.\n", BEEP,
+				'\n');
 			break;
 		}
 	    }
+	    
+	    // lunch time
+	    schoolyardInteraction();
 	    c.clear();
 	}
     }

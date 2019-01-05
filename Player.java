@@ -8,24 +8,26 @@ public class Player {
 	// 3. Hopeful: Work hard and receive a major bonus
 	// 4. Nervous: Get buff and earn a well-paying movie contract
 	
-	// change invalid storyline values to a default
-	if (mentalState <= 1 || mentalState >= 4) { 
-	    mentalState = 1;
-	} else {
-	    this.storyline = mentalState;
-	}
+	this.ending = mentalState;
     }
     
     public final String NAME = "CONNER";
     
-    private int storyline;
+    private int date; // 1. Ivy
+		      // 2. Kate
+		      // 3. Miranda
+		      // 4. Tiffany
+    private int ending;
     
     // stats
     private int charm = 0;
     private int intelligence = 0;
     private int karma = 0;
     private int strength = 0;
-    private int money;
+    private int money = 0;
+    
+    // job promotion counter
+    private int jobLevel = 0;
     
     // decisions
     public boolean hasSandwich;
@@ -65,6 +67,13 @@ public class Player {
 	this.money += gain;
     }
     
+    public void promote() {
+	if (this.jobLevel < 5) {
+	    this.jobLevel += 1;
+	}
+    }
+    
+    // getter methods
     public int getCharm() {
 	return this.charm;
     }
@@ -83,5 +92,9 @@ public class Player {
     
     public int getMoney() {
 	return this.money;
+    }
+    
+    public int getJobLevel() {
+	return this.jobLevel;
     }
 }
