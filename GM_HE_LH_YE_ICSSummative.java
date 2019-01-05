@@ -11,7 +11,7 @@ public class GM_HE_LH_YE_ICSSummative {
 						 // mornings
     private final static boolean AFTERNOON = false; // paramater value for
 						    // afternoons
-    private final static String STAT = "snd/05_STATCHANGE.wav"; // stat sound
+    private final static String STAT = "snd/06_STATCHANGE.wav"; // stat sound
 								// file path 
     private final static String WEEK[] = {"MONDAY", "TUESDAY", "WEDNESDAY",
 					  "THURSDAY", "FRIDAY"};
@@ -117,6 +117,109 @@ public class GM_HE_LH_YE_ICSSummative {
 	}
     }
     
+    private static void hallwayDecision(boolean isMorning) {
+	boolean inClass = false;
+	boolean ranSuicides = false; // flag only allows suicides to
+				     // be ran once daily
+	for (int hours = 0; !inClass && hours < 3; hours++) {
+	    c.clear();
+	    c.println("DAY " + day + ": " + WEEK[(day - 1) % 5]);
+	    
+	    if (isMorning) {
+		c.println((9 + hours) + ":00 A.M.");
+	    } else {
+		c.println((1 + hours) + ":00 P.M.");
+	    }
+	    
+	    // TODO-GUI: this choice to be replaced with
+	    // interactive user movement
+	    c.println("Where do you want to go?");
+	    c.println("1. Classroom");
+	    c.println("2. Library");
+	    c.println("3. Weight room");
+	    c.println("4. Gymnasium");
+	    c.println("5. Stairwell");
+	    c.println();
+	    int hallwayChoice = awaitDigitRange(5, BEEP);
+	    
+	    switch (hallwayChoice) {
+		case 1: // go to class
+		    player.addKarma(10);
+		    typeByChar("Changed my mind. I should go to class.\n", 
+			    '\n');
+		    typeByChar("Me: \"Sorry I'm late.\"\n", BEEP, '\n');
+		    AudioPlayer.player.start(loadSound(STAT));
+		    c.println("+10 Karma");
+		    inClass = true;
+		    break;
+		case 2: // library
+		    c.println("It's study time.");
+		    c.println("1. Study alone");
+		    c.println("2. Study with Miranda");
+		    c.println("3. Study with friends");
+		    c.println();
+		    libraryActivities(awaitDigitRange(3, BEEP));
+		    awaitTyping('\n');
+		    break;
+		case 3: // weight room
+		    typeByChar("Is that Tiffany? Guess she's into beefy "
+			    + "guys.\n", '\n');
+		    c.println("1. Approach Tiffany");
+		    c.println("2. Enter the weight room");
+		    c.println();
+		    
+		    if (awaitDigitRange(2, BEEP) == 1) {
+			typeByChar("Me: \"Hey Tiffany! Wanna work out "
+				+ "together?\"\n", '\n');
+			typeByChar("Tiffany: \"Ew, no, what's a loser like "
+				+ "you doing here?\"\n", BEEP, '\n');
+		    }
+		    
+		    c.print("You walk past Tiffany and enter the ");
+		    c.println("weight room.");
+		    c.println();
+		    c.println("What do you do now?");
+		    c.println("1. Work out");
+		    c.println("2. Leave");
+		    c.println();
+		     
+		    if (awaitDigitRange(2, BEEP) == 1) { // enter weight room
+			weightRoomActivities();
+			awaitTyping('\n');
+		    }
+		    break;
+		case 4: // gymnasium
+		    typeByChar("Basketball player: \"Move aside! You wanna "
+			    + " get trampled?\"\n", '\n');
+		    c.println();
+		    c.println("What do you want to do here?");
+		    c.println("1. Play basketball");
+		    c.println("2. Do suicides");
+		    c.println();
+		    int gymChoice = awaitDigitRange(2, BEEP);
+		    
+		    if (ranSuicides && gymChoice == 2) {
+			typeByChar("Enough suicides for today.", '\n');
+			gymActivities(1);
+		    } else {
+			gymActivities(gymChoice);
+		    }
+		    awaitTyping('\n');
+		    break;
+		case 5: // stairwell
+		    if (isMorning) {
+			typeByChar("I bust in on a goods trade. Raian spots "
+				+ "me.\n", '\n');
+			typeByChar("Raian: Get outta here, runt.\n", BEEP,
+				'\n');
+		    } else {
+			typeByChar("There's nothing to do here.", '\n');
+		    }
+		    break;
+		}
+	    }
+    }
+    
     // handles library scenarios
     private static void libraryActivities(int activity) {
 	switch (activity) {
@@ -190,7 +293,7 @@ public class GM_HE_LH_YE_ICSSummative {
 		break;
 	}
     }
-	
+    
     // simplifies audio resource imports
     private static AudioStream loadSound(String filePath) {
 	try {
@@ -235,6 +338,35 @@ public class GM_HE_LH_YE_ICSSummative {
 	}
     }
     
+    // custom input handler
+    private static String readIn(int length) {
+	String input = "";
+	char in = ' ';
+	
+	while (!(in == '\n' && input.length() > 0)) {
+	    in = c.getChar();
+	    if (((in >= 'A' && in <= 'Z') || (in >= '1' && in <= '9')
+		    || in == ' ' || in == '-') && (input.length() < length)) {
+		input += in;
+		AudioPlayer.player.start(loadSound("snd/03_TYPING.wav"));
+		c.print(in);
+	    } else if (in >= 'a' && in <= 'z' && input.length() < length) {
+		in = Character.toUpperCase(in); // majuscule conversion
+		input += in;
+		AudioPlayer.player.start(loadSound("snd/03_TYPING.wav"));
+		c.print(in);
+	    } else if (in == '\b' && input.length() > 0) { // clearing input
+		input = input.substring(0, input.length() - 1);
+		AudioPlayer.player.start(loadSound("snd/03_TYPING.wav"));
+		c.setCursor(c.getRow(), c.getColumn() - 1);
+		c.print(" ");
+		c.setCursor(c.getRow(), c.getColumn() - 1);
+	    }
+	}
+	c.println();
+	return input;
+    }
+    
     // simple random number generator
     private static int rng(int max) {
 	return (int) (Math.random() * max) + 1;
@@ -244,11 +376,12 @@ public class GM_HE_LH_YE_ICSSummative {
     private static void schoolyardInteraction(boolean isMorning) {
 	int schoolyardChoice;
 	do {
+	    c.clear();
 	    c.println("DAY " + day + ": " + WEEK[(day - 1) % 5]);
-	    if (isMorning == MORNING) {
-		c.println("8:30 a.m.");
+	    if (isMorning) {
+		c.println("8:30 A.M.");
 	    } else {
-		c.println("12:00 p.m.");
+		c.println("12:00 P.M.");
 	    }
 	    c.println();
 	    
@@ -332,7 +465,6 @@ public class GM_HE_LH_YE_ICSSummative {
 			}
 		    break;
 	    }
-	    c.clear();
 	} while (schoolyardChoice != 5);
     }
 	
@@ -425,7 +557,7 @@ public class GM_HE_LH_YE_ICSSummative {
     }
     
     public static void main(String[] args) throws IOException {
-	c = new Console("LOVE STORY");
+	c = new Console("LOVESTORY");
 	
 	// customize console
 	c.setColor(Color.black);
@@ -438,19 +570,22 @@ public class GM_HE_LH_YE_ICSSummative {
 	AudioPlayer.player.start(introMusic);
 	
 	parseDialogue("dialogue/01_INTRO.txt");
-	
-	// these characteristics are ultimately ignored
+
+	c.println();
+	c.println("(Type on your keyboard)");
 	c.print("What is your name? ");
-	String name = c.readString();
+	String name = readIn(6);
+	
+	// these inputs are ignored and not saved to variables
 	typeByChar("What do you look like?\n", BEEP);
 	c.print("Your hair colour? ");
-	c.readString();
+	readIn(20);
 	c.print("Eye colour? ");
-	c.readString();
+	readIn(20);
 	c.print("Skin tone? ");
-	c.readString();
+	readIn(20);
 	c.print("Outfit? ");
-	c.readString();
+	readIn(15);
 
 	// mental state selection, which affects story
 	c.println();
@@ -473,12 +608,12 @@ public class GM_HE_LH_YE_ICSSummative {
 	AudioPlayer.player.stop(introMusic);
 	
 	wait(2000);
-	AudioStream laugh = loadSound("snd/03_LAUGH.wav");
+	AudioStream laugh = loadSound("snd/04_LAUGH.wav");
 	AudioPlayer.player.start(laugh);
 	typeByChar("NO ONE GETS TO CHOOSE WHO THEY ARE IN THIS WORLD!\n",
 		BEEP);
 	
-	if (!name.equalsIgnoreCase("Conner")) {
+	if (!name.replaceAll(" ", "").equals("CONNER")) {
 	    typeByChar("Y O U R   N A M E  I S . . .");
 	    for (int i = 0; i < 256; i++) {
 		Color bg = new Color(i, i, i);
@@ -503,7 +638,7 @@ public class GM_HE_LH_YE_ICSSummative {
 	c.println("(Press ENTER to advance dialogue.)");
 	
 	// story begins
-	AudioPlayer.player.start(loadSound("snd/04_ALARM.wav"));
+	AudioPlayer.player.start(loadSound("snd/05_ALARM.wav"));
 	parseDialogue("dialogue/03_MOM.txt", '\n');
 	
 	// choice to take sandwich
@@ -535,7 +670,6 @@ public class GM_HE_LH_YE_ICSSummative {
 	
 	// school day
 	// game over on day 200 as everyone graduates
-	c.clear();
 	for (; day <= 200; day++) {
 	    // schoolyard
 	    schoolyardInteraction(MORNING);
@@ -543,7 +677,7 @@ public class GM_HE_LH_YE_ICSSummative {
 	    // school morning
 	    c.clear();
 	    c.println("DAY " + day + ": " + WEEK[(day - 1) % 5]);
-	    c.println("9:00 a.m.");
+	    c.println("9:00 A.M.");
 	    
 	    boolean wentToClass = false;
 	    
@@ -576,98 +710,18 @@ public class GM_HE_LH_YE_ICSSummative {
 		awaitTyping('\n');
 	    }
 	    
-	    // flag only allow suicides to be ran once a day
-	    boolean ranSuicides = false;
 	    
-	    // morning activities
-	    for (int hours = 0; !wentToClass && hours < 3; hours++) {
-		c.clear();
-		c.println("DAY " + day + ": " + WEEK[(day - 1) % 5]);
-		c.println((9 + hours) + ":00 a.m.");
-		
-		// TODO-GUI: this choice to be replaced with
-		// interactive user movement
-		c.println("Where do you want to go?");
-		c.println("1. Classroom");
-		c.println("2. Library");
-		c.println("3. Weight room");
-		c.println("4. Gymnasium");
-		c.println("5. Stairwell");
-		c.println();
-		int hallwayChoice = awaitDigitRange(5, BEEP);
-		
-		switch (hallwayChoice) {
-		    case 1: // go to class
-			player.addKarma(10);
-			typeByChar("Changed my mind. I should go to class.\n",
-				'\n');
-			typeByChar("Me: \"Sorry I'm late.\"\n", BEEP, '\n');
-			AudioPlayer.player.start(loadSound(STAT));
-			c.println("+10 Karma");
-			wentToClass = true;
-			break;
-		    case 2: // library
-			c.println("It's study time.");
-			c.println("1. Study alone");
-			c.println("2. Study with Miranda");
-			c.println("3. Study with friends");
-			c.println();
-			libraryActivities(awaitDigitRange(3, BEEP));
-			awaitTyping('\n');
-			break;
-		    case 3: // weight room
-			typeByChar("Is that Tiffany? Guess she's into beefy "
-				+ "guys.\n", '\n');
-			c.println("1. Approach Tiffany");
-			c.println("2. Enter the weight room");
-			c.println();
-			
-			if (awaitDigitRange(2, BEEP) == 1) {
-			    typeByChar("Me: \"Hey Tiffany! Wanna work out "
-				    + "together?\"\n", '\n');
-			    typeByChar("Tiffany: \"Ew, no, what's a loser "
-				    + "like you doing here?\"\n", BEEP, '\n');
-			}
-			
-			c.print("You walk past Tiffany and enter the ");
-			c.println("weight room.");
-			c.println();
-			c.println("What do you do now?");
-			c.println("1. Work out");
-			c.println("2. Leave");
-			c.println();
-			
-			if (awaitDigitRange(2, BEEP) == 1) {
-			    weightRoomActivities();
-			    awaitTyping('\n');
-			}
-			break;
-		    case 4: // gymnasium
-			typeByChar("Basketball player: \"Move aside! You  "
-				+ "wanna get trampled?\"\n", '\n');
-			c.println();
-			c.println("What do you want to do here?");
-			c.println("1. Play basketball");
-			c.println("2. Do suicides");
-			c.println();
-			int gymChoice = awaitDigitRange(2, BEEP);
-			
-			if (ranSuicides && gymChoice == 2) {
-			    typeByChar("I've had enough for today.");
-			    gymActivities(1);
-			} else {
-			    gymActivities(gymChoice);
-			}
-			awaitTyping('\n');
-			break;
-		    case 5: // stairwell
-			typeByChar("I bust in on a goods trade. Raian "
-				+ "spots me and turns to me fuming.\n", '\n');
-			typeByChar("Raian: Get outta here, runt.\n", BEEP,
-				'\n');
-			break;
-		}
+	    if (!wentToClass) {
+		// morning activities
+		hallwayDecision(MORNING);
 	    }
+	    
+	    // lunch time
+	    schoolyardInteraction(AFTERNOON);
+	    
+	    // afternoon activities
+	    hallwayDecision(AFTERNOON);
+	    
 	    c.clear();
 	}
     }
