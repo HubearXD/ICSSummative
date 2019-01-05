@@ -497,7 +497,7 @@ public class GM_HE_LH_YE_ICSSummative {
 	
 	// story begins
 	AudioPlayer.player.start(loadSound("snd/04_ALARM.wav"));
-	parseDialogue("dialogue/03_DAY1.txt", '\n');
+	parseDialogue("dialogue/03_MOM.txt", '\n');
 	
 	// choice to take sandwich
 	c.println();
