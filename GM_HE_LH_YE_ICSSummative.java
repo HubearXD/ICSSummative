@@ -400,26 +400,26 @@ public class GM_HE_LH_YE_ICSSummative {
 	    c.println();
 	    switch (schoolyardChoice) {
 		case 1: // Ivy
-		    if (player.getCharm() >= 80
-			&& player.getIntelligence() >= 60
-			&& player.getKarma() <= -150
-			&& player.getStrength() >= 30) {
-			// positive response
-		    } else {
+		    if (player.getCharm() < 80
+			    || player.getIntelligence() < 60
+			    || player.getKarma() > -150
+			    || player.getStrength() < 30) {
 			typeByChar("Ivy: There's no 'I' in team, nor is "
 				+ "there a 'u' in \"relationship\"!\n", '\n');
 			typeByChar("Looks like I need to get more charm, "
 				+ "brains, and brawn before I can approach "
 				+ "her.", BEEP, '\n');
+		    } else if (player.date != 1) {
+			// TODO: taken message
+		    } else {
+			// TODO: assign quest
 		    }
 		    break;
 		case 2: // Kate
-		    if (player.getCharm() >= 80
-			&& player.getIntelligence() >= 30
-			&& player.getKarma() >= 50
-			&& player.getStrength() >= 50) {
-			// positive response
-		    } else {
+		    if (player.getCharm() < 80
+			    || player.getIntelligence() < 30
+			    || player.getKarma() < 50
+			    || player.getStrength() < 50) {
 			typeByChar("She's MY type: cute. I'm gonna try "
 				+ "to talk to her.\n", '\n');
 			typeByChar("Me: \"Hey, cutie, the name's Conner. "
@@ -435,34 +435,43 @@ public class GM_HE_LH_YE_ICSSummative {
 			typeByChar("No matter if it's by fraud or by "
 				+ "force, I've gotta get that jock away from "
 				+ "from her.", BEEP, '\n');
-			}
+		    } else if (player.date != 2) {
+			// TODO: taken message
+		    } else {
+			// TODO: assign quest
+		    }
 		    break;
 		case 3: // Miranda
-		    if (player.getCharm() >= 80
-			&& player.getIntelligence() >= 100
-			&& player.getStrength() >= 30) {
-			// positive response
-		    } else {
+		    if (player.getCharm() < 80
+			    || player.getIntelligence() < 100
+			    || player.getStrength() < 30) {
 			typeByChar("Me: \"Hey hottie, what are you "
 				+ "looking at?\"\n", '\n');
 			typeByChar("Miranda: \"Go away, I'm studying for "
 				+ "AIME. Talk to me when you score perfect "
 				+ "on AMC 12.\"\n", BEEP, '\n');
 			typeByChar("Me: \"Okay then.\"", BEEP, '\n');
+		    } else if (player.date != 3) {
+			// TODO: taken message
+		    } else {
+			// TODO: assign quest
 		    }
 		    break;
 		case 4: // Tiffany
-		    if (player.getCharm() >= 40
-			&& player.getIntelligence() >= 40
-			&& player.getKarma() <= -20
-			&& player.getStrength() >= 60) {
-			// positive response
-		    } else {
+		    if (player.getCharm() < 40
+			    || player.getIntelligence() < 40
+			    || player.getKarma() > -20
+			    || player.getStrength() < 60) {
 			typeByChar("Tiffany: \"Sorry not interested. Who "
 				+ "do you think you are anyway?\"\n", '\n');
 			typeByChar("How am I gonna catch her attention? "
 				+ "Do I need more looks? ", BEEP, '\n');
 			}
+		    } else if (player.date != 4) {
+			// TODO: taken message
+		    } else {
+			// TODO: assign quest
+		    }
 		    break;
 	    }
 	} while (schoolyardChoice != 5);

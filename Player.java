@@ -2,21 +2,19 @@ import java.awt.Color;
 
 public class Player {
     public Player(int mentalState) {
-	// Mental states correspond to storylines:
-	// 1. Loved: Parents die and leave you an inheritance
-	// 2. Depressed: Long lost bank account rediscovered
-	// 3. Hopeful: Work hard and receive a major bonus
-	// 4. Nervous: Get buff and earn a well-paying movie contract
 	this.ending = mentalState;
     }
     
     public final String NAME = "CONNER";
     
-    private int date; // 1. Ivy
-		      // 2. Kate
-		      // 3. Miranda
-		      // 4. Tiffany
-    private int ending;
+    public int date; // 1. Ivy
+		     // 2. Kate
+		     // 3. Miranda
+		     // 4. Tiffany
+    private int ending; // 1. Loved: Parents die and leave you an inheritance
+			// 2. Depressed: Long lost bank account rediscovered
+			// 3. Hopeful: Work hard and receive a major bonus
+			// 4. Nervous: Earn a well-paying movie contract
     
     // stats
     private int charm = 0;
