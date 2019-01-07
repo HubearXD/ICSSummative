@@ -23,8 +23,8 @@ public class Player {
     private int strength = 0;
     private int money = 0;
     
-    // job promotion counter
-    private int jobLevel = 0;
+    private int jobLevel = 1; // job promotion counter
+    private int shiftTotal = 0; // total amount of shifts worked
     
     // decisions
     public boolean hasSandwich;
@@ -65,6 +65,14 @@ public class Player {
 	this.money += gain;
     }
     
+    public void addShiftTotal(int gain) {
+	if (this.shiftTotal + gain < 0) {
+	    this.strength = 0;
+	} else {
+	    this.shiftTotal += gain;
+	}
+    }
+    
     public void promote() {
 	if (this.jobLevel < 5) {
 	    this.jobLevel += 1;
@@ -94,5 +102,9 @@ public class Player {
     
     public int getJobLevel() {
 	return this.jobLevel;
+    }
+    
+    public int getShiftTotal() {
+	return this.shiftTotal;
     }
 }

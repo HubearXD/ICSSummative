@@ -115,8 +115,10 @@ public class GM_HE_LH_YE_ICSSummative {
 	    AudioPlayer.player.start(loadSound(STAT));
 	    c.println("+1 Strength");
 	}
+	c.getChar();
     }
     
+    // handles hallway roaming
     private static void hallwayDecision(boolean isMorning) {
 	boolean inClass = false;
 	boolean ranSuicides = false; // flag only allows suicides to
@@ -400,10 +402,10 @@ public class GM_HE_LH_YE_ICSSummative {
 	    c.println();
 	    switch (schoolyardChoice) {
 		case 1: // Ivy
-		    if (player.getCharm() < 80
-			    || player.getIntelligence() < 60
+		    if (player.getCharm() < 100
+			    || player.getIntelligence() < 80
 			    || player.getKarma() > -150
-			    || player.getStrength() < 30) {
+			    || player.getStrength() < 60) {
 			typeByChar("Ivy: There's no 'I' in team, nor is "
 				+ "there a 'u' in \"relationship\"!\n", '\n');
 			typeByChar("Looks like I need to get more charm, "
@@ -417,8 +419,8 @@ public class GM_HE_LH_YE_ICSSummative {
 		    break;
 		case 2: // Kate
 		    if (player.getCharm() < 80
-			    || player.getIntelligence() < 30
-			    || player.getKarma() < 50
+			    || player.getIntelligence() < 60
+			    || player.getKarma() < 100
 			    || player.getStrength() < 50) {
 			typeByChar("She's MY type: cute. I'm gonna try "
 				+ "to talk to her.\n", '\n');
@@ -458,16 +460,16 @@ public class GM_HE_LH_YE_ICSSummative {
 		    }
 		    break;
 		case 4: // Tiffany
-		    if (player.getCharm() < 40
+		    if (player.getCharm() < 60
 			    || player.getIntelligence() < 40
 			    || player.getKarma() > -20
-			    || player.getStrength() < 60) {
+			    || player.getStrength() < 100) {
 			typeByChar("Tiffany: \"Sorry not interested. Who "
 				+ "do you think you are anyway?\"\n", '\n');
 			typeByChar("How am I gonna catch her attention? "
 				+ "Do I need more looks? ", BEEP, '\n');
 			}
-		    } else if (player.date != 4) {
+		     else if (player.date != 4) {
 			// TODO: taken message
 		    } else {
 			// TODO: assign quest
@@ -563,7 +565,89 @@ public class GM_HE_LH_YE_ICSSummative {
 	    c.println("+10 Karma");
 	    c.println("+15 Strength");
 	}
+	
+	c.getChar();
     }
+	
+    // handles workplace scenarios
+    private static void workPlaceActivities(int count) {
+	int rand = rng(10);
+	int choice = rng(100);
+	
+	if (rand < 10 && count == 1){
+	    player.addMoney(15);
+	    c.println("You swept floors.");
+	    c.println("+$15");
+	}
+	
+	else if (rand == 10 && count == 1) {
+	    player.addMoney(55);
+	    player.addCharm(20);
+	    c.print("You took the mop and danced with dynamic and ");
+	    c.print("topological style. The customers cheered and left you ");
+	    c.println("a handsome tip");
+	    c.println("+$55");
+	    c.println("+20 Charm");
+	}
+	
+	else if(rand <10 && count == 2){
+	c.println("You operated the cash register.");
+	player.addMoney(17);
+	c.println("+$17");  
+	
+	}
+	else if(rand == 10 && count == 2){
+	c.println("You pocketed the customer's money while no one was looking.");
+	player.addMoney(317);
+	c.println("+$317");
+	c.println("-20 Karma");
+	player.addKarma(-20);
+	}
+	
+	else if(rand < 10 && count == 3){
+	c.println("You flipped some dough.");
+	player.addMoney(19);
+	c.println("+$19");
+	}
+	else if(rand == 10 && count == 3){
+	c.println("You shaped the dough. Shame on you");
+	player.addMoney(19);
+	player.addCharm(-10);
+	c.println("+$19");
+	c.println("-10 Charm");
+	}
+	
+	else if(rand <10 && count == 4){
+	c.println("You topped a pizza with toppings");
+	player.addMoney(21);
+	c.println("+$21");
+	
+	}
+	
+	else if(rand == 10 && count == 4){
+	c.println("You customized a pizza with Bacon, Mushrooms, and to my disgust/n"
+		    +"YOU PUT PINEAPPLES ON!!! SHAME!!!");
+	player.addMoney(21);
+	c.println("+$21");
+	c.println("-666 Karma");
+	}
+	
+	
+	
+	else if(choice%5 != 0 && count == 5){
+       
+	c.println("You managed some employees");
+	player.addMoney(25);
+	c.println("+$25");
+	
+	}
+	else{
+	c.println("You named yourself the \"Employee of the Month\". What a @!#$ move!");
+	}
+	AudioPlayer.player.start(loadSound(STAT));
+	c.getChar();
+	c.clear();
+       }
     
     public static void main(String[] args) throws IOException {
 	c = new Console("LOVESTORY");
@@ -613,15 +697,16 @@ public class GM_HE_LH_YE_ICSSummative {
 	player = new Player(mentalState);
 	
 	// second part of introduction
-	parseDialogue("dialogue/02_INTRO.txt");
 	AudioPlayer.player.stop(introMusic);
+	parseDialogue("dialogue/02_INTRO.txt");
+	
 	
 	wait(2000);
 	AudioStream laugh = loadSound("snd/04_LAUGH.wav");
 	AudioPlayer.player.start(laugh);
 	typeByChar("NO ONE GETS TO CHOOSE WHO THEY ARE IN THIS WORLD!\n",
 		BEEP);
-	
+	wait(3000);
 	if (!name.replaceAll(" ", "").equals("CONNER")) {
 	    typeByChar("Y O U R   N A M E  I S . . .");
 	    for (int i = 0; i < 256; i++) {
@@ -686,8 +771,8 @@ public class GM_HE_LH_YE_ICSSummative {
 	    // school morning
 	    c.clear();
 	    c.println("DAY " + day + ": " + WEEK[(day - 1) % 5]);
-	    c.println("9:00 A.M.");
-	    
+	    c.println("8:30 A.M.");
+	   
 	    boolean wentToClass = false;
 	    
 	    // hall monitor encounter on the first day
@@ -719,9 +804,7 @@ public class GM_HE_LH_YE_ICSSummative {
 		awaitTyping('\n');
 	    }
 	    
-	    
-	    if (!wentToClass) {
-		// morning activities
+	    if (!wentToClass) { 
 		hallwayDecision(MORNING);
 	    }
 	    
@@ -731,7 +814,85 @@ public class GM_HE_LH_YE_ICSSummative {
 	    // afternoon activities
 	    hallwayDecision(AFTERNOON);
 	    
+	    // after school
 	    c.clear();
+	    
+	    c.println("DAY " + day + ": " + WEEK[(day - 1) % 5]);
+	    c.println("4:00 P.M.");
+	    typeByChar("I've got a couple of free hours.\n", BEEP, '\n');
+	    c.println();
+	    c.println("How do you want to spend your evening?");
+	    c.println("1. Work");
+	    c.println("2. Go home");
+	    c.println();
+	    int eveningChoice = awaitDigitRange(2, BEEP);
+	    
+	    if (eveningChoice == 1) {
+	    // transport to workplace background
+		typeByChar("I go to my part-time job at Walji's Pizza "
+			+ "Palace.\n", '\n');
+		for (int hours = 0; eveningChoice == 1 && hours < 5;
+			hours++) {
+		    workPlaceActivities(player.getJobLevel());
+		    player.addShiftTotal(1);
+		    
+		    int shiftTotal = player.getShiftTotal();
+		    int jobLevel = player.getJobLevel();
+		    if (shiftTotal > 2 && jobLevel == 1
+			    && player.getCharm() > 40) {
+			player.promote();
+			AudioPlayer.player.start(loadSound(STAT));
+			c.println("Congratulations! You are now a Cashier!");
+		    } else if (shiftTotal > 2 && jobLevel == 2
+			    && player.getStrength() > 50) {
+			player.promote();
+			AudioPlayer.player.start(loadSound(STAT));
+			c.print("Congratulations! You are now a Dough ");
+			c.println("Flipper!");
+		    } else if (shiftTotal > 2 && jobLevel == 3 
+			    && player.getStrength() > 60) {
+			player.promote();
+			AudioPlayer.player.start(loadSound(STAT));
+			c.print("Congratulations! You are now a Topping ");
+			c.println("Topper!");
+		    } else if (shiftTotal > 2 && jobLevel == 4
+			    && player.getCharm() > 70
+			    && player.getIntelligence() > 70) {
+			player.promote();
+			AudioPlayer.player.start(loadSound(STAT));
+			c.print("Congratulations! You are now a Major ");
+			c.println("Manager!");
+		    }
+		    
+		    c.println();
+		    c.println("Work another shift?");
+		    c.println("1. Yes");
+		    c.println("2. Go home");
+		    eveningChoice = awaitDigitRange(2, BEEP);
+		    c.clear();
+		}
+	    } else {
+		typeByChar("I went home and remembered I had homework.\n", 
+			'n');
+		c.println("What do you do?");
+		c.println("1. Homework.");
+		c.println("2. Sleep");
+		int homeChoice = awaitDigitRange(2, BEEP);
+		
+		for (int hours = 0; homeChoice == 1 && hours < 5; hours++) {
+		    c.print("You studied for a while and finished your ");
+		    c.println("homework");
+		    player.addIntelligence(10);
+		    AudioPlayer.player.start(loadSound(STAT));
+		    c.println("+10 Intelligence");
+		    
+		    c.println("Keep studying?");
+		    c.println("1. Yes");
+		    c.println("2. Sleep");
+		    homeChoice = awaitDigitRange(2, BEEP);
+		}   
+		typeByChar("Looks like it's the end of the day!", BEEP, '\n');
+	    }                 
 	}
     }
 }
