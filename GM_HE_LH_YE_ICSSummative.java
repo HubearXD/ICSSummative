@@ -422,7 +422,7 @@ public class GM_HE_LH_YE_ICSSummative {
 			c.println("2. Reject Ivy");
 			c.println();
 			
-			if (awaitDigitRange() == 1) {
+			if (awaitDigitRange(2, BEEP) == 1) {
 			    parseDialogue("dialogue/05_IVYACCEPT.txt", '\n');
 			} else {
 			    parseDialogue("dialogue/06_IVYREJECT.txt", '\n');
@@ -456,6 +456,7 @@ public class GM_HE_LH_YE_ICSSummative {
 				+ "really lucky girl!\"\n", 'n');
 		    } else {
 			
+	     
 		    }
 		    break;
 		case 3: // Miranda
