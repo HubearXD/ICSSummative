@@ -412,9 +412,21 @@ public class GM_HE_LH_YE_ICSSummative {
 				+ "brains, and brawn before I can approach "
 				+ "her.", BEEP, '\n');
 		    } else if (player.date != 1) {
-			// TODO: taken message
+			typeByChar("Ivy: \"You crusty man Jor! Go away, you "
+				+ "already have someone else. I'm not one of "
+				+ "your bootleg flappers!\"\n", '\n');
 		    } else {
-			// TODO: assign quest
+			parseDialogue("dialogue/04_IVYFLIRT.txt", '\n');
+			c.println();
+			c.println("1. Accept Ivy");
+			c.println("2. Reject Ivy");
+			c.println();
+			
+			if (awaitDigitRange() == 1) {
+			    parseDialogue("dialogue/05_IVYACCEPT.txt", '\n');
+			} else {
+			    parseDialogue("dialogue/06_IVYREJECT.txt", '\n');
+			}
 		    }
 		    break;
 		case 2: // Kate
@@ -438,9 +450,12 @@ public class GM_HE_LH_YE_ICSSummative {
 				+ "force, I've gotta get that jock away from "
 				+ "from her.", BEEP, '\n');
 		    } else if (player.date != 2) {
-			// TODO: taken message
+			typeByChar("Kate: \"I heard that you got together "
+				+ "with a hot girl. It's a shame. I really "
+				+ "liked you. Good luck with her! She's a "
+				+ "really lucky girl!\"\n", 'n');
 		    } else {
-			// TODO: assign quest
+			
 		    }
 		    break;
 		case 3: // Miranda
@@ -454,7 +469,9 @@ public class GM_HE_LH_YE_ICSSummative {
 				+ "on AMC 12.\"\n", BEEP, '\n');
 			typeByChar("Me: \"Okay then.\"", BEEP, '\n');
 		    } else if (player.date != 3) {
-			// TODO: taken message
+			typeByChar("Miranda: \"Why are you such a Wet Henry? "
+				+ "I bet you get excited from watching girls "
+				+ "through the window.", '\n');
 		    } else {
 			// TODO: assign quest
 		    }
@@ -468,9 +485,10 @@ public class GM_HE_LH_YE_ICSSummative {
 				+ "do you think you are anyway?\"\n", '\n');
 			typeByChar("How am I gonna catch her attention? "
 				+ "Do I need more looks? ", BEEP, '\n');
-			}
-		     else if (player.date != 4) {
-			// TODO: taken message
+		    } else if (player.date != 4) {
+			typeByChar("Tiffany: EXCUSE ME! I HAVE A GIRLFRIEND! "
+				+ "I MEAN BOYFRIEND! YOU ALREADY HAVE A "
+				+ "GIRLFRIEND!", '\n');
 		    } else {
 			// TODO: assign quest
 		    }
@@ -565,8 +583,6 @@ public class GM_HE_LH_YE_ICSSummative {
 	    c.println("+10 Karma");
 	    c.println("+15 Strength");
 	}
-	
-	c.getChar();
     }
 	
     // handles workplace scenarios
@@ -574,80 +590,72 @@ public class GM_HE_LH_YE_ICSSummative {
 	int rand = rng(10);
 	int choice = rng(100);
 	
-	if (rand < 10 && count == 1){
+	if (rand < 10 && count == 1) {
 	    player.addMoney(15);
 	    c.println("You swept floors.");
+	    AudioPlayer.player.start(loadSound(STAT));
 	    c.println("+$15");
-	}
-	
-	else if (rand == 10 && count == 1) {
+	} else if (rand == 10 && count == 1) {
 	    player.addMoney(55);
 	    player.addCharm(20);
+	    AudioPlayer.player.start(loadSound(STAT));
 	    c.print("You took the mop and danced with dynamic and ");
 	    c.print("topological style. The customers cheered and left you ");
 	    c.println("a handsome tip");
+	    AudioPlayer.player.start(loadSound(STAT));
 	    c.println("+$55");
 	    c.println("+20 Charm");
+	} else if (rand < 10 && count == 2) {
+	    player.addMoney(17);
+	    c.println("You operated the cash register.");
+	    AudioPlayer.player.start(loadSound(STAT));
+	    c.println("+$17"); 
+	} else if (rand == 10 && count == 2) {
+	    player.addMoney(317);
+	    player.addKarma(-20);
+	    c.print("You pocketed the customer's money while no one was "
+	    c.println("looking.");
+	    AudioPlayer.player.start(loadSound(STAT));
+	    c.println("+$317");
+	    c.println("-20 Karma");
+	    player.addKarma(-20);
+	} else if (rand < 10 && count == 3) {
+	    player.addMoney(19);
+	    c.println("You flipped some dough.");
+	    AudioPlayer.player.start(loadSound(STAT));
+	    c.println("+$19");
+	} else if (rand == 10 && count == 3) {
+	    player.addMoney(19);
+	    player.addCharm(-10);
+	    c.println("You shaped the dough. (Shame on you!)");
+	    AudioPlayer.player.start(loadSound(STAT));
+	    c.println("+$19");
+	    c.println("-10 Charm");
+	} else if (rand < 10 && count == 4) {
+	    player.addMoney(21);
+	    c.println("You topped a pizza with toppings.");
+	    AudioPlayer.player.start(loadSound(STAT));
+	    c.println("+$21");
+	} else if (rand == 10 && count == 4) {
+	    player.addMoney(21);
+	    c.print("You customized a pizza with bacon, mushrooms, (and to ");
+	    c.println("disgust) pineapples. (SHAME!)");
+	    AudioPlayer.player.start(loadSound(STAT));
+	    c.println("+$21");
+	    c.println("-666 Karma");
+	} else if (choice % 5 != 0 && count == 5){
+	    player.addMoney(25);
+	    c.println("You managed some employees");
+	    AudioPlayer.player.start(loadSound(STAT));
+	    c.println("+$25");
+	} else {
+	    player.addMoney(6427)
+	    c.print("You named yourself the \"Employee of the Month\". ");
+	    c.println("What a @!#$ move!");
+	    AudioPlayer.player.start(loadSound(STAT));
+	    c.println("+$6525");
 	}
-	
-	else if(rand <10 && count == 2){
-	c.println("You operated the cash register.");
-	player.addMoney(17);
-	c.println("+$17");  
-	
-	}
-	else if(rand == 10 && count == 2){
-	c.println("You pocketed the customer's money while no one was looking.");
-	player.addMoney(317);
-	c.println("+$317");
-	c.println("-20 Karma");
-	player.addKarma(-20);
-	}
-	
-	else if(rand < 10 && count == 3){
-	c.println("You flipped some dough.");
-	player.addMoney(19);
-	c.println("+$19");
-	}
-	else if(rand == 10 && count == 3){
-	c.println("You shaped the dough. Shame on you");
-	player.addMoney(19);
-	player.addCharm(-10);
-	c.println("+$19");
-	c.println("-10 Charm");
-	}
-	
-	else if(rand <10 && count == 4){
-	c.println("You topped a pizza with toppings");
-	player.addMoney(21);
-	c.println("+$21");
-	
-	}
-	
-	else if(rand == 10 && count == 4){
-	c.println("You customized a pizza with Bacon, Mushrooms, and to my disgust/n"
-		    +"YOU PUT PINEAPPLES ON!!! SHAME!!!");
-	player.addMoney(21);
-	c.println("+$21");
-	c.println("-666 Karma");
-	}
-	
-	
-	
-	else if(choice%5 != 0 && count == 5){
-       
-	c.println("You managed some employees");
-	player.addMoney(25);
-	c.println("+$25");
-	
-	}
-	else{
-	c.println("You named yourself the \"Employee of the Month\". What a @!#$ move!");
-	}
-	AudioPlayer.player.start(loadSound(STAT));
-	c.getChar();
-	c.clear();
-       }
+    }
     
     public static void main(String[] args) throws IOException {
 	c = new Console("LOVESTORY");
@@ -863,6 +871,7 @@ public class GM_HE_LH_YE_ICSSummative {
 			c.print("Congratulations! You are now a Major ");
 			c.println("Manager!");
 		    }
+		    awaitTyping('\n');
 		    
 		    c.println();
 		    c.println("Work another shift?");
@@ -871,28 +880,27 @@ public class GM_HE_LH_YE_ICSSummative {
 		    eveningChoice = awaitDigitRange(2, BEEP);
 		    c.clear();
 		}
-	    } else {
-		typeByChar("I went home and remembered I had homework.\n", 
-			'n');
-		c.println("What do you do?");
-		c.println("1. Homework.");
-		c.println("2. Sleep");
-		int homeChoice = awaitDigitRange(2, BEEP);
+	    }
+	    
+	    typeByChar("I went home and remembered I had homework.\n", 'n');
+	    c.println("What do you do?");
+	    c.println("1. Homework");
+	    c.println("2. Sleep");
+	    int homeChoice = awaitDigitRange(2, BEEP);
+	    
+	    for (int hours = 0; homeChoice == 1 && hours < 5; hours++) {
+		c.print("You studied for a while and finished your ");
+		c.println("homework.");
+		player.addIntelligence(10);
+		AudioPlayer.player.start(loadSound(STAT));
+		c.println("+10 Intelligence");
 		
-		for (int hours = 0; homeChoice == 1 && hours < 5; hours++) {
-		    c.print("You studied for a while and finished your ");
-		    c.println("homework");
-		    player.addIntelligence(10);
-		    AudioPlayer.player.start(loadSound(STAT));
-		    c.println("+10 Intelligence");
-		    
-		    c.println("Keep studying?");
-		    c.println("1. Yes");
-		    c.println("2. Sleep");
-		    homeChoice = awaitDigitRange(2, BEEP);
-		}   
-		typeByChar("Looks like it's the end of the day!", BEEP, '\n');
-	    }                 
+		c.println("Keep studying?");
+		c.println("1. Yes");
+		c.println("2. Sleep");
+		homeChoice = awaitDigitRange(2, BEEP);
+	     }
+	     typeByChar("Looks like it's the end of the day!", BEEP, '\n');               
 	}
     }
 }

@@ -5,12 +5,16 @@ public class Player {
 	this.ending = mentalState;
     }
     
+    // useless constants
     public final String NAME = "CONNER";
+    public final int friends = -1; 
     
-    public int date; // 1. Ivy
-		     // 2. Kate
-		     // 3. Miranda
-		     // 4. Tiffany
+    
+    public int date;      // 1. Ivy
+    public int quest = 0; // 2. Kate
+			  // 3. Miranda
+			  // 4. Tiffany
+		
     private int ending; // 1. Loved: Parents die and leave you an inheritance
 			// 2. Depressed: Long lost bank account rediscovered
 			// 3. Hopeful: Work hard and receive a major bonus
