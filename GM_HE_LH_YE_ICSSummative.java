@@ -417,7 +417,7 @@ public class GM_HE_LH_YE_ICSSummative {
 				+ "already have someone else. I'm not one of "
 				+ "your bootleg flappers!\"\n", '\n');
 		    } else {
-			parseDialogue("dialogue/04_IVYFLIRT.txt", '\n');
+			parseDialogue("txt/04_IVYFLIRT.txt", '\n');
 			c.println();
 			c.println("1. Accept Ivy's quest");
 			c.println("2. Reject Ivy's quest");
@@ -484,7 +484,7 @@ public class GM_HE_LH_YE_ICSSummative {
 				+ "I bet you get excited from watching girls "
 				+ "through the window.", '\n');
 		    } else {
-			parseDialogue("dialogue/06_MIRANDAFLIRT.txt", '\n');
+			parseDialogue("txt/06_MIRANDAFLIRT.txt", '\n');
 			c.println();
 			c.println("1. Accept Miranda's quest");
 			c.println("2. Reject Miranda's quest");
@@ -523,7 +523,7 @@ public class GM_HE_LH_YE_ICSSummative {
 				+ "I MEAN BOYFRIEND! YOU ALREADY HAVE A "
 				+ "GIRLFRIEND!", '\n');
 		    } else {
-			parseDialogue("dialogue/07_TIFFANYFLIRT.txt", '\n');
+			parseDialogue("txt/07_TIFFANYFLIRT.txt", '\n');
 			c.println();
 			c.println("1. Accept Tiffany's quest");
 			c.println("2. Reject Tiffany's quest");
@@ -716,7 +716,7 @@ public class GM_HE_LH_YE_ICSSummative {
 	AudioStream introMusic = loadSound("snd/01_INTROBG.wav");
 	AudioPlayer.player.start(introMusic);
 	
-	parseDialogue("dialogue/01_INTRO.txt");
+	parseDialogue("txt/01_INTRO.txt");
 	c.println();
 	c.println("(Type on your keyboard)");
 	c.print("What is your name? ");
@@ -748,7 +748,7 @@ public class GM_HE_LH_YE_ICSSummative {
 	
 	// second part of introduction
 	AudioPlayer.player.stop(introMusic);
-	parseDialogue("dialogue/02_INTRO.txt");
+	parseDialogue("txt/02_INTRO.txt");
 	
 	wait(2000);
 	AudioStream laugh = loadSound("snd/04_LAUGH.wav");
@@ -783,7 +783,7 @@ public class GM_HE_LH_YE_ICSSummative {
 	
 	// story begins
 	AudioPlayer.player.start(loadSound("snd/05_ALARM.wav"));
-	parseDialogue("dialogue/03_MOM.txt", '\n');
+	parseDialogue("txt/03_MOM.txt", '\n');
 	
 	// choice to take sandwich
 	c.println();
