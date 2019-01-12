@@ -1,24 +1,18 @@
 import java.awt.Color;
 
 public class Player {
-    public Player(int mentalState) {
-	this.ending = mentalState;
-    }
-    
-    // useless constants
-    public final String NAME = "CONNER";
-    public final int friends = -1; 
-    
-    
     public int date;      // 1. Ivy
     public int quest = 0; // 2. Kate
 			  // 3. Miranda
 			  // 4. Tiffany
-		
-    private int ending; // 1. Loved: Parents die and leave you an inheritance
-			// 2. Depressed: Long lost bank account rediscovered
-			// 3. Hopeful: Work hard and receive a major bonus
-			// 4. Nervous: Earn a well-paying movie contract
+    
+    public int ending; // 1. Loved: Parents die and leave you an inheritance
+		       // 2. Depressed: Long lost bank account rediscovered
+		       // 3. Hopeful: Work hard and receive a major bonus
+		       // 4. Nervous: Earn a well-paying movie contract
+    
+    // decisions
+    public boolean hasSandwich;
     
     // stats
     private int charm = 0;
@@ -27,12 +21,9 @@ public class Player {
     private int strength = 0;
     private int money = 0;
     
-    private int jobLevel = 1; // job promotion counter
+    private int jobLevel = 0; // job promotion counter
     private int shiftTotal = 0; // total amount of shifts worked
-    
-    // decisions
-    public boolean hasSandwich;
-    
+	    
     // stat modifiers
     // only karma can drop below 0
     public void addCharm(int gain) {
@@ -69,12 +60,8 @@ public class Player {
 	this.money += gain;
     }
     
-    public void addShiftTotal(int gain) {
-	if (this.shiftTotal + gain < 0) {
-	    this.strength = 0;
-	} else {
-	    this.shiftTotal += gain;
-	}
+    public void incrementShiftTotal(int gain) {
+	this.shiftTotal++;
     }
     
     public void promote() {

@@ -12,14 +12,14 @@ public class GM_HE_LH_YE_ICSSummative {
     private final static boolean AFTERNOON = false; // paramater value for
 						    // afternoons
     private final static String STAT = "snd/06_STATCHANGE.wav"; // stat sound
-								// file path 
+								// file path
     private final static String WEEK[] = {"MONDAY", "TUESDAY", "WEDNESDAY",
 					  "THURSDAY", "FRIDAY"};
-    
+
     private static Console c;
     private static Player player;
     private static int day = 1;
-    
+
     // awaits a numeric key press within a range and returns the number
     private static int awaitDigitRange(int max) {
 	int in = 0;
@@ -28,14 +28,14 @@ public class GM_HE_LH_YE_ICSSummative {
 	} while(in < 1 || in > max);
 	return in;
     }
-    
+
     // overloaded to allow playing a sound on valid key press
     private static int awaitDigitRange(int max, String soundFilePath) {
 	int in = awaitDigitRange(max);
 	AudioPlayer.player.start(loadSound(soundFilePath));
 	return in;
     }
-    
+
     // awaits a character key press and returns the character
     private static char awaitTyping(char target) {
 	if (target == 0) {
@@ -48,7 +48,7 @@ public class GM_HE_LH_YE_ICSSummative {
 	    return in;
 	}
     }
-	
+
     // fades to black using progressively darker full-screen rectangles
     private static void fadeBlack() {
 	for (int i = 255; i >= 0; i--) {
@@ -58,7 +58,7 @@ public class GM_HE_LH_YE_ICSSummative {
 	    wait(10);
 	}
     }
-    
+
     // fades to white using progressively lighter full-screen rectangles
     private static void fadeWhite() {
 	for (int i = 0; i <= 255; i++) {
@@ -68,7 +68,7 @@ public class GM_HE_LH_YE_ICSSummative {
 	    wait(15);
 	}
     }
-    
+
     // handles gymnasium scenarios
     private static void gymActivities(int activity) {
 	if (activity == 1) { // play basketball
@@ -117,7 +117,7 @@ public class GM_HE_LH_YE_ICSSummative {
 	}
 	c.getChar();
     }
-    
+
     // handles hallway roaming
     private static void hallwayDecision(boolean isMorning) {
 	boolean inClass = false;
@@ -126,13 +126,13 @@ public class GM_HE_LH_YE_ICSSummative {
 	for (int hours = 0; !inClass && hours < 3; hours++) {
 	    c.clear();
 	    c.println("DAY " + day + ": " + WEEK[(day - 1) % 5]);
-	    
+
 	    if (isMorning) {
 		c.println((9 + hours) + ":00 A.M.");
 	    } else {
 		c.println((1 + hours) + ":00 P.M.");
 	    }
-	    
+
 	    // TODO-GUI: this choice to be replaced with
 	    // interactive user movement
 	    c.println("Where do you want to go?");
@@ -143,11 +143,11 @@ public class GM_HE_LH_YE_ICSSummative {
 	    c.println("5. Stairwell");
 	    c.println();
 	    int hallwayChoice = awaitDigitRange(5, BEEP);
-	    
+
 	    switch (hallwayChoice) {
 		case 1: // go to class
 		    player.addKarma(10);
-		    typeByChar("Changed my mind. I should go to class.\n", 
+		    typeByChar("Changed my mind. I should go to class.\n",
 			    '\n');
 		    typeByChar("Me: \"Sorry I'm late.\"\n", BEEP, '\n');
 		    AudioPlayer.player.start(loadSound(STAT));
@@ -169,14 +169,14 @@ public class GM_HE_LH_YE_ICSSummative {
 		    c.println("1. Approach Tiffany");
 		    c.println("2. Enter the weight room");
 		    c.println();
-		    
+
 		    if (awaitDigitRange(2, BEEP) == 1) {
 			typeByChar("Me: \"Hey Tiffany! Wanna work out "
 				+ "together?\"\n", '\n');
 			typeByChar("Tiffany: \"Ew, no, what's a loser like "
 				+ "you doing here?\"\n", BEEP, '\n');
 		    }
-		    
+
 		    c.print("You walk past Tiffany and enter the ");
 		    c.println("weight room.");
 		    c.println();
@@ -184,7 +184,7 @@ public class GM_HE_LH_YE_ICSSummative {
 		    c.println("1. Work out");
 		    c.println("2. Leave");
 		    c.println();
-		     
+
 		    if (awaitDigitRange(2, BEEP) == 1) { // enter weight room
 			weightRoomActivities();
 			awaitTyping('\n');
@@ -199,7 +199,7 @@ public class GM_HE_LH_YE_ICSSummative {
 		    c.println("2. Do suicides");
 		    c.println();
 		    int gymChoice = awaitDigitRange(2, BEEP);
-		    
+
 		    if (ranSuicides && gymChoice == 2) {
 			typeByChar("Enough suicides for today.", '\n');
 			gymActivities(1);
@@ -221,7 +221,7 @@ public class GM_HE_LH_YE_ICSSummative {
 		}
 	    }
     }
-    
+
     // handles library scenarios
     private static void libraryActivities(int activity) {
 	switch (activity) {
@@ -295,7 +295,7 @@ public class GM_HE_LH_YE_ICSSummative {
 		break;
 	}
     }
-    
+
     // simplifies audio resource imports
     private static AudioStream loadSound(String filePath) {
 	try {
@@ -304,19 +304,19 @@ public class GM_HE_LH_YE_ICSSummative {
 	    return null;
 	}
     }
-    
+
     // reads dialogue from TXT files
     private static void parseDialogue(String filePath) throws IOException {
 	parseDialogue(filePath, (char) 0);
     }
-    
+
     // overloaded to allow awaiting keypress before advancing to next line
     private static void parseDialogue(String filePath, char awaitTarget)
 	    throws IOException {
 	BufferedReader br = new BufferedReader(new FileReader(filePath));
 	try {
 	    String line = br.readLine();
-	    
+
 	    while (line != null) {
 		// output style specified using line prefixes
 		if (line.equals("^")) {
@@ -339,12 +339,12 @@ public class GM_HE_LH_YE_ICSSummative {
 	    br.close();
 	}
     }
-    
+
     // custom input handler
     private static String readIn(int length) {
 	String input = "";
 	char in = ' ';
-	
+
 	while (!(in == '\n' && input.length() > 0)) {
 	    in = c.getChar();
 	    if (((in >= 'A' && in <= 'Z') || (in >= '1' && in <= '9')
@@ -368,14 +368,15 @@ public class GM_HE_LH_YE_ICSSummative {
 	c.println();
 	return input;
     }
-    
+
     // simple random number generator
     private static int rng(int max) {
 	return (int) (Math.random() * max) + 1;
     }
-    
+
     // free interaction with girls
-    private static void schoolyardInteraction(boolean isMorning) {
+    private static void schoolyardInteraction(boolean isMorning) throws
+	    IOException {
 	int schoolyardChoice;
 	do {
 	    c.clear();
@@ -386,7 +387,7 @@ public class GM_HE_LH_YE_ICSSummative {
 		c.println("12:00 P.M.");
 	    }
 	    c.println();
-	    
+
 	    // TODO-GUI: this choice to be replaced with
 	    // interactive user movement
 	    c.println("What do you do?");
@@ -396,7 +397,7 @@ public class GM_HE_LH_YE_ICSSummative {
 	    c.println("4. Talk to Tiffany");
 	    c.println("5. Go inside");
 	    schoolyardChoice = awaitDigitRange(5, BEEP);
-	    
+
 	    // girls' dialogues
 	    // TODO: all quest and taken responses
 	    c.println();
@@ -421,11 +422,15 @@ public class GM_HE_LH_YE_ICSSummative {
 			c.println("1. Accept Ivy");
 			c.println("2. Reject Ivy");
 			c.println();
-			
+
 			if (awaitDigitRange(2, BEEP) == 1) {
 			    parseDialogue("dialogue/05_IVYACCEPT.txt", '\n');
+			    player.quest = 0;
 			} else {
-			    parseDialogue("dialogue/06_IVYREJECT.txt", '\n');
+			    typeByChar("Me: \"Be more independent. Go help "
+				    + "yourself.\"\n", '\n');
+			    typeByChar("Ivy: \"I knew you were a bad boy the "
+				    + "moment I saw you.\"\n", '\n');
 			}
 		    }
 		    break;
@@ -455,8 +460,7 @@ public class GM_HE_LH_YE_ICSSummative {
 				+ "liked you. Good luck with her! She's a "
 				+ "really lucky girl!\"\n", 'n');
 		    } else {
-			
-	     
+			// TODO: assign quest
 		    }
 		    break;
 		case 3: // Miranda
@@ -497,7 +501,7 @@ public class GM_HE_LH_YE_ICSSummative {
 	    }
 	} while (schoolyardChoice != 5);
     }
-	
+    
     // delivers text output one character at a time at default speed
     private static void typeByChar(String msg) {
 	typeByChar(msg, (char) 0);
@@ -580,23 +584,17 @@ public class GM_HE_LH_YE_ICSSummative {
 	    c.print("The gym instructor was tired and needed help. You ");
 	    c.println("put away your dumbbells to help him out.");
 	    AudioPlayer.player.start(loadSound(STAT));
-	    c.println("+15 Charm"); 
+	    c.println("+15 Charm");
 	    c.println("+10 Karma");
 	    c.println("+15 Strength");
 	}
     }
-	
+    
     // handles workplace scenarios
-    private static void workPlaceActivities(int count) {
-	int rand = rng(10);
-	int choice = rng(100);
+    private static void workPlaceActivities(int job) {
+	int rand = (job == 5) ? rng(100) : rng(10);
 	
-	if (rand < 10 && count == 1) {
-	    player.addMoney(15);
-	    c.println("You swept floors.");
-	    AudioPlayer.player.start(loadSound(STAT));
-	    c.println("+$15");
-	} else if (rand == 10 && count == 1) {
+	if (job == 1 && rand == 1) {
 	    player.addMoney(55);
 	    player.addCharm(20);
 	    AudioPlayer.player.start(loadSound(STAT));
@@ -606,51 +604,56 @@ public class GM_HE_LH_YE_ICSSummative {
 	    AudioPlayer.player.start(loadSound(STAT));
 	    c.println("+$55");
 	    c.println("+20 Charm");
-	} else if (rand < 10 && count == 2) {
-	    player.addMoney(17);
-	    c.println("You operated the cash register.");
+	} else if (job == 0 && rand > 1) {
+	    player.addMoney(15);
+	    c.println("You swept floors.");
 	    AudioPlayer.player.start(loadSound(STAT));
-	    c.println("+$17"); 
-	} else if (rand == 10 && count == 2) {
+	    c.println("+$15");
+	} else if (job == 2 && rand == 1) {
 	    player.addMoney(317);
 	    player.addKarma(-20);
-	    c.print("You pocketed the customer's money while no one was "
+	    c.print("You pocketed the customer's money while no one was ");
 	    c.println("looking.");
 	    AudioPlayer.player.start(loadSound(STAT));
 	    c.println("+$317");
 	    c.println("-20 Karma");
 	    player.addKarma(-20);
-	} else if (rand < 10 && count == 3) {
-	    player.addMoney(19);
-	    c.println("You flipped some dough.");
+	} else if (job == 2 && rand > 1) {
+	    player.addMoney(17);
+	    c.println("You operated the cash register.");
 	    AudioPlayer.player.start(loadSound(STAT));
-	    c.println("+$19");
-	} else if (rand == 10 && count == 3) {
+	    c.println("+$17");
+	} else if (job == 3 && rand == 1) {
 	    player.addMoney(19);
 	    player.addCharm(-10);
 	    c.println("You shaped the dough. (Shame on you!)");
 	    AudioPlayer.player.start(loadSound(STAT));
 	    c.println("+$19");
 	    c.println("-10 Charm");
-	} else if (rand < 10 && count == 4) {
-	    player.addMoney(21);
-	    c.println("You topped a pizza with toppings.");
+	} else if (job == 3 && rand > 1) {
+	    player.addMoney(19);
+	    c.println("You flipped some dough.");
 	    AudioPlayer.player.start(loadSound(STAT));
-	    c.println("+$21");
-	} else if (rand == 10 && count == 4) {
+	    c.println("+$19");
+	} else if (job == 4 && rand == 1) {
 	    player.addMoney(21);
 	    c.print("You customized a pizza with bacon, mushrooms, (and to ");
 	    c.println("disgust) pineapples. (SHAME!)");
 	    AudioPlayer.player.start(loadSound(STAT));
 	    c.println("+$21");
-	    c.println("-666 Karma");
-	} else if (choice % 5 != 0 && count == 5){
+	    c.println("-666 Karma"); // not actually deducted
+	} else if (job == 4 && rand > 1) {
+	    player.addMoney(21);
+	    c.println("You topped a pizza with toppings.");
+	    AudioPlayer.player.start(loadSound(STAT));
+	    c.println("+$21");
+	} else if (job == 5 && rand == 1) {
 	    player.addMoney(25);
 	    c.println("You managed some employees");
 	    AudioPlayer.player.start(loadSound(STAT));
 	    c.println("+$25");
 	} else {
-	    player.addMoney(6427)
+	    player.addMoney(6525);
 	    c.print("You named yourself the \"Employee of the Month\". ");
 	    c.println("What a @!#$ move!");
 	    AudioPlayer.player.start(loadSound(STAT));
@@ -660,6 +663,9 @@ public class GM_HE_LH_YE_ICSSummative {
     
     public static void main(String[] args) throws IOException {
 	c = new Console("LOVESTORY");
+	
+	// creates Player instance for the protagonist character
+	player = new Player();
 	
 	// customize console
 	c.setColor(Color.black);
@@ -672,11 +678,10 @@ public class GM_HE_LH_YE_ICSSummative {
 	AudioPlayer.player.start(introMusic);
 	
 	parseDialogue("dialogue/01_INTRO.txt");
-
 	c.println();
 	c.println("(Type on your keyboard)");
 	c.print("What is your name? ");
-	String name = readIn(6);
+	String name = readIn(10);
 	
 	// these inputs are ignored and not saved to variables
 	typeByChar("What do you look like?\n", BEEP);
@@ -688,7 +693,7 @@ public class GM_HE_LH_YE_ICSSummative {
 	readIn(20);
 	c.print("Outfit? ");
 	readIn(15);
-
+	
 	// mental state selection, which affects story
 	c.println();
 	c.println("How is your little buddy feeling today?");
@@ -696,26 +701,23 @@ public class GM_HE_LH_YE_ICSSummative {
 	c.println("2. DEPRESSED");
 	c.println("3. HOPEFUL");
 	c.println("4. NERVOUS");
-	int mentalState = awaitDigitRange(4);
+	player.ending = awaitDigitRange(4, BEEP);
 	
-	typeByChar("Very good.", BEEP);
+	typeByChar("Very good.");
 	wait(2000);
 	c.clear();
-
-	// creates Player instance for the protagonist character
-	player = new Player(mentalState);
 	
 	// second part of introduction
 	AudioPlayer.player.stop(introMusic);
 	parseDialogue("dialogue/02_INTRO.txt");
-	
 	
 	wait(2000);
 	AudioStream laugh = loadSound("snd/04_LAUGH.wav");
 	AudioPlayer.player.start(laugh);
 	typeByChar("NO ONE GETS TO CHOOSE WHO THEY ARE IN THIS WORLD!\n",
 		BEEP);
-	wait(3000);
+	wait(2000);
+	
 	if (!name.replaceAll(" ", "").equals("CONNER")) {
 	    typeByChar("Y O U R   N A M E  I S . . .");
 	    for (int i = 0; i < 256; i++) {
@@ -767,7 +769,7 @@ public class GM_HE_LH_YE_ICSSummative {
 	}
 	awaitTyping('\n');
 	
-	c.println();
+	c.println(); 
 	typeByChar("Me: \"Bye Mom, bye Dad, I'm leaving!\"", BEEP, '\n');
 	fadeBlack();
 	
@@ -781,7 +783,7 @@ public class GM_HE_LH_YE_ICSSummative {
 	    c.clear();
 	    c.println("DAY " + day + ": " + WEEK[(day - 1) % 5]);
 	    c.println("8:30 A.M.");
-	   
+	    
 	    boolean wentToClass = false;
 	    
 	    // hall monitor encounter on the first day
@@ -813,7 +815,7 @@ public class GM_HE_LH_YE_ICSSummative {
 		awaitTyping('\n');
 	    }
 	    
-	    if (!wentToClass) { 
+	    if (!wentToClass) {
 		hallwayDecision(MORNING);
 	    }
 	    
@@ -825,7 +827,6 @@ public class GM_HE_LH_YE_ICSSummative {
 	    
 	    // after school
 	    c.clear();
-	    
 	    c.println("DAY " + day + ": " + WEEK[(day - 1) % 5]);
 	    c.println("4:00 P.M.");
 	    typeByChar("I've got a couple of free hours.\n", BEEP, '\n');
@@ -843,28 +844,28 @@ public class GM_HE_LH_YE_ICSSummative {
 		for (int hours = 0; eveningChoice == 1 && hours < 5;
 			hours++) {
 		    workPlaceActivities(player.getJobLevel());
-		    player.addShiftTotal(1);
+		    player.incrementShiftTotal(1);
 		    
 		    int shiftTotal = player.getShiftTotal();
 		    int jobLevel = player.getJobLevel();
-		    if (shiftTotal > 2 && jobLevel == 1
+		    if (shiftTotal > 2 && jobLevel == 0
 			    && player.getCharm() > 40) {
 			player.promote();
 			AudioPlayer.player.start(loadSound(STAT));
 			c.println("Congratulations! You are now a Cashier!");
-		    } else if (shiftTotal > 2 && jobLevel == 2
+		    } else if (shiftTotal > 2 && jobLevel == 1
 			    && player.getStrength() > 50) {
 			player.promote();
 			AudioPlayer.player.start(loadSound(STAT));
 			c.print("Congratulations! You are now a Dough ");
 			c.println("Flipper!");
-		    } else if (shiftTotal > 2 && jobLevel == 3 
+		    } else if (shiftTotal > 2 && jobLevel == 2
 			    && player.getStrength() > 60) {
 			player.promote();
 			AudioPlayer.player.start(loadSound(STAT));
 			c.print("Congratulations! You are now a Topping ");
 			c.println("Topper!");
-		    } else if (shiftTotal > 2 && jobLevel == 4
+		    } else if (shiftTotal > 2 && jobLevel == 3
 			    && player.getCharm() > 70
 			    && player.getIntelligence() > 70) {
 			player.promote();
@@ -895,13 +896,13 @@ public class GM_HE_LH_YE_ICSSummative {
 		player.addIntelligence(10);
 		AudioPlayer.player.start(loadSound(STAT));
 		c.println("+10 Intelligence");
-		
+
 		c.println("Keep studying?");
 		c.println("1. Yes");
 		c.println("2. Sleep");
 		homeChoice = awaitDigitRange(2, BEEP);
 	     }
-	     typeByChar("Looks like it's the end of the day!", BEEP, '\n');               
+	     typeByChar("Looks like it's the end of the day!", BEEP, '\n');
 	}
     }
 }
