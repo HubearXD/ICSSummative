@@ -419,18 +419,24 @@ public class GM_HE_LH_YE_ICSSummative {
 		    } else {
 			parseDialogue("dialogue/04_IVYFLIRT.txt", '\n');
 			c.println();
-			c.println("1. Accept Ivy");
-			c.println("2. Reject Ivy");
+			c.println("1. Accept Ivy's quest");
+			c.println("2. Reject Ivy's quest");
 			c.println();
 
 			if (awaitDigitRange(2, BEEP) == 1) {
-			    parseDialogue("dialogue/05_IVYACCEPT.txt", '\n');
-			    player.quest = 0;
+			    typeByChar("Me: \"Sure. What's up?\"\n", '\n');
+			    typeByChar("Ivy: \"I'm feeling kinda thirsty. "
+				    + "Get me some bubble tea.\"\n", BEEP,
+				    '\n');
+			    typeByChar("Me: \"Okay. Where do you want to "
+				    + "meet?\"\n", BEEP, '\n');
+			    typeByChar("Ivy: In the C4 room.", BEEP, '\n');
+			    player.quest = 1;
 			} else {
 			    typeByChar("Me: \"Be more independent. Go help "
 				    + "yourself.\"\n", '\n');
 			    typeByChar("Ivy: \"I knew you were a bad boy the "
-				    + "moment I saw you.\"\n", '\n');
+				    + "moment I saw you.\"", BEEP, '\n');
 			}
 		    }
 		    break;
@@ -458,7 +464,7 @@ public class GM_HE_LH_YE_ICSSummative {
 			typeByChar("Kate: \"I heard that you got together "
 				+ "with a hot girl. It's a shame. I really "
 				+ "liked you. Good luck with her! She's a "
-				+ "really lucky girl!\"\n", 'n');
+				+ "really lucky girl!\"", 'n');
 		    } else {
 			// TODO: assign quest
 		    }
@@ -478,7 +484,29 @@ public class GM_HE_LH_YE_ICSSummative {
 				+ "I bet you get excited from watching girls "
 				+ "through the window.", '\n');
 		    } else {
-			// TODO: assign quest
+			parseDialogue("dialogue/06_MIRANDAFLIRT.txt", '\n');
+			c.println();
+			c.println("1. Accept Miranda's quest");
+			c.println("2. Reject Miranda's quest");
+			c.println();
+			
+			if (awaitDigitRange(2, BEEP) == 1) {
+			    typeByChar("Me: \"Sure, I'd like more "
+				    + "challenging problems.\"\n", '\n');
+			    typeByChar("Miranda: \"Alright, I'll see you in "
+				    + "the library at 3.\"\n", BEEP, '\n');
+			    typeByChar("Me: \"See ya.\"", BEEP, '\n');
+			    player.quest = 3;
+			} else {
+			    typeByChar("Me: \"Nah, I'll stick to the "
+				    + "homework.\"\n", '\n');
+			    typeByChar("Miranda: \"Can't sway a rock like "
+				    + "you. I need myself a man that can "
+				    + "solve Lagrangian geometry.\n", BEEP,
+				    '\n');
+			    typeByChar("Me: \"Cool. See ya, weeb.\"", BEEP,
+				    '\n');
+			}
 		    }
 		    break;
 		case 4: // Tiffany
@@ -495,7 +523,19 @@ public class GM_HE_LH_YE_ICSSummative {
 				+ "I MEAN BOYFRIEND! YOU ALREADY HAVE A "
 				+ "GIRLFRIEND!", '\n');
 		    } else {
-			// TODO: assign quest
+			parseDialogue("dialogue/07_TIFFANYFLIRT.txt", '\n');
+			c.println();
+			c.println("1. Accept Tiffany's quest");
+			c.println("2. Reject Tiffany's quest");
+			c.println();
+
+			if (awaitDigitRange(2, BEEP) == 1) {
+			    // TODO: Add acceptance dialogue
+			    player.quest = 4;
+			} else {
+			    typeByChar("Me: \"I'm not your slave, you dumb "
+				    + "Jor.\"", '\n');
+			}
 		    }
 		    break;
 	    }
@@ -581,8 +621,8 @@ public class GM_HE_LH_YE_ICSSummative {
 	    player.addCharm(15);
 	    player.addKarma(10);
 	    player.addStrength(15);
-	    c.print("The gym instructor was tired and needed help. You ");
-	    c.println("put away your dumbbells to help him out.");
+	    c.print("The gym instructor was tired and needed help. You put ");
+	    c.println("away your dumbbells to help him out.");
 	    AudioPlayer.player.start(loadSound(STAT));
 	    c.println("+15 Charm");
 	    c.println("+10 Karma");
@@ -591,10 +631,9 @@ public class GM_HE_LH_YE_ICSSummative {
     }
     
     // handles workplace scenarios
-    private static void workPlaceActivities(int job) {
-	int rand = (job == 5) ? rng(100) : rng(10);
-	
-	if (job == 1 && rand == 1) {
+    private static void work(int job) {
+	int rand = rng(100);
+	if (job == 0 && rand <= 10) {
 	    player.addMoney(55);
 	    player.addCharm(20);
 	    AudioPlayer.player.start(loadSound(STAT));
@@ -604,12 +643,12 @@ public class GM_HE_LH_YE_ICSSummative {
 	    AudioPlayer.player.start(loadSound(STAT));
 	    c.println("+$55");
 	    c.println("+20 Charm");
-	} else if (job == 0 && rand > 1) {
+	} else if (job == 0 && rand > 10) {
 	    player.addMoney(15);
 	    c.println("You swept floors.");
 	    AudioPlayer.player.start(loadSound(STAT));
 	    c.println("+$15");
-	} else if (job == 2 && rand == 1) {
+	} else if (job == 1 && rand <= 10) {
 	    player.addMoney(317);
 	    player.addKarma(-20);
 	    c.print("You pocketed the customer's money while no one was ");
@@ -618,46 +657,46 @@ public class GM_HE_LH_YE_ICSSummative {
 	    c.println("+$317");
 	    c.println("-20 Karma");
 	    player.addKarma(-20);
-	} else if (job == 2 && rand > 1) {
+	} else if (job == 1 && rand > 10) {
 	    player.addMoney(17);
 	    c.println("You operated the cash register.");
 	    AudioPlayer.player.start(loadSound(STAT));
 	    c.println("+$17");
-	} else if (job == 3 && rand == 1) {
+	} else if (job == 2 && rand <= 10) {
 	    player.addMoney(19);
 	    player.addCharm(-10);
-	    c.println("You shaped the dough. (Shame on you!)");
+	    c.println("You dropped the dough. (Shame on you!)");
 	    AudioPlayer.player.start(loadSound(STAT));
 	    c.println("+$19");
 	    c.println("-10 Charm");
-	} else if (job == 3 && rand > 1) {
+	} else if (job == 2 && rand > 10) {
 	    player.addMoney(19);
 	    c.println("You flipped some dough.");
 	    AudioPlayer.player.start(loadSound(STAT));
 	    c.println("+$19");
-	} else if (job == 4 && rand == 1) {
+	} else if (job == 3 && rand <= 10) {
 	    player.addMoney(21);
 	    c.print("You customized a pizza with bacon, mushrooms, (and to ");
 	    c.println("disgust) pineapples. (SHAME!)");
 	    AudioPlayer.player.start(loadSound(STAT));
 	    c.println("+$21");
 	    c.println("-666 Karma"); // not actually deducted
-	} else if (job == 4 && rand > 1) {
+	} else if (job == 3 && rand > 10) {
 	    player.addMoney(21);
 	    c.println("You topped a pizza with toppings.");
 	    AudioPlayer.player.start(loadSound(STAT));
 	    c.println("+$21");
-	} else if (job == 5 && rand == 1) {
-	    player.addMoney(25);
-	    c.println("You managed some employees");
-	    AudioPlayer.player.start(loadSound(STAT));
-	    c.println("+$25");
-	} else {
+	} else if (job == 4 && rand <= 5) {
 	    player.addMoney(6525);
 	    c.print("You named yourself the \"Employee of the Month\". ");
 	    c.println("What a @!#$ move!");
 	    AudioPlayer.player.start(loadSound(STAT));
 	    c.println("+$6525");
+	} else {
+	    player.addMoney(25);
+	    c.println("You managed some employees");
+	    AudioPlayer.player.start(loadSound(STAT));
+	    c.println("+$25");
 	}
     }
     
@@ -837,35 +876,40 @@ public class GM_HE_LH_YE_ICSSummative {
 	    c.println();
 	    int eveningChoice = awaitDigitRange(2, BEEP);
 	    
+	    int hours = 0;
+	    
+	    // working
 	    if (eveningChoice == 1) {
-	    // transport to workplace background
 		typeByChar("I go to my part-time job at Walji's Pizza "
 			+ "Palace.\n", '\n');
-		for (int hours = 0; eveningChoice == 1 && hours < 5;
+		for (; eveningChoice == 1 && hours < 5;
 			hours++) {
-		    workPlaceActivities(player.getJobLevel());
+		    c.clear();
+		    c.println("DAY " + day + ": " + WEEK[(day - 1) % 5]);
+		    c.println((4 + hours) + ":00 P.M.");
+		    work(player.getJobLevel());
 		    player.incrementShiftTotal(1);
 		    
 		    int shiftTotal = player.getShiftTotal();
 		    int jobLevel = player.getJobLevel();
-		    if (shiftTotal > 2 && jobLevel == 0
+		    if (shiftTotal > 5 && jobLevel == 0
 			    && player.getCharm() > 40) {
 			player.promote();
 			AudioPlayer.player.start(loadSound(STAT));
 			c.println("Congratulations! You are now a Cashier!");
-		    } else if (shiftTotal > 2 && jobLevel == 1
+		    } else if (shiftTotal > 10 && jobLevel == 1
 			    && player.getStrength() > 50) {
 			player.promote();
 			AudioPlayer.player.start(loadSound(STAT));
 			c.print("Congratulations! You are now a Dough ");
 			c.println("Flipper!");
-		    } else if (shiftTotal > 2 && jobLevel == 2
+		    } else if (shiftTotal > 15 && jobLevel == 2
 			    && player.getStrength() > 60) {
 			player.promote();
 			AudioPlayer.player.start(loadSound(STAT));
 			c.print("Congratulations! You are now a Topping ");
 			c.println("Topper!");
-		    } else if (shiftTotal > 2 && jobLevel == 3
+		    } else if (shiftTotal > 20 && jobLevel == 3
 			    && player.getCharm() > 70
 			    && player.getIntelligence() > 70) {
 			player.promote();
@@ -880,29 +924,44 @@ public class GM_HE_LH_YE_ICSSummative {
 		    c.println("1. Yes");
 		    c.println("2. Go home");
 		    eveningChoice = awaitDigitRange(2, BEEP);
-		    c.clear();
 		}
 	    }
 	    
-	    typeByChar("I went home and remembered I had homework.\n", 'n');
-	    c.println("What do you do?");
-	    c.println("1. Homework");
-	    c.println("2. Sleep");
-	    int homeChoice = awaitDigitRange(2, BEEP);
+	    c.clear();
+	    c.println("DAY " + day + ": " + WEEK[(day - 1) % 5]);
+	    c.println((4 + hours) + ":00 P.M.");
 	    
-	    for (int hours = 0; homeChoice == 1 && hours < 5; hours++) {
-		c.print("You studied for a while and finished your ");
-		c.println("homework.");
-		player.addIntelligence(10);
-		AudioPlayer.player.start(loadSound(STAT));
-		c.println("+10 Intelligence");
-
-		c.println("Keep studying?");
-		c.println("1. Yes");
+	    // studying
+	    typeByChar("I went home and remembered I had homework.\n", 'n');
+	    
+	    if (hours == 5) {
+		typeByChar("But I'm too tired now. Oh well.\n", BEEP, '\n');
+	    } else {
+		c.clear();
+		c.println("DAY " + day + ": " + WEEK[(day - 1) % 5]);
+		c.println((4 + hours) + ":00 P.M.");
+		
+		c.println();
+		c.println("What do you do?");
+		c.println("1. Homework");
 		c.println("2. Sleep");
-		homeChoice = awaitDigitRange(2, BEEP);
-	     }
-	     typeByChar("Looks like it's the end of the day!", BEEP, '\n');
+		c.println();
+		int homeChoice = awaitDigitRange(2, BEEP);
+		
+		for (; homeChoice == 1 && hours < 5; hours++) {
+		    c.print("You studied for a while and finished your ");
+		    c.println("homework.");
+		    player.addIntelligence(10);
+		    AudioPlayer.player.start(loadSound(STAT));
+		    c.println("+10 Intelligence");
+		    
+		    c.println("Keep studying?");
+		    c.println("1. Yes");
+		    c.println("2. Sleep");
+		    homeChoice = awaitDigitRange(2, BEEP);
+		}
+	    }
+	    typeByChar("It's the end of the day!", BEEP, '\n');
 	}
     }
 }

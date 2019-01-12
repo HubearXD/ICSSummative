@@ -21,7 +21,11 @@ public class Player {
     private int strength = 0;
     private int money = 0;
     
-    private int jobLevel = 0; // job promotion counter
+    private int jobLevel = 0; // 0. Floor Sweeper
+			      // 1. Cashier
+			      // 2. Dough Flipper
+			      // 3. Topping Topper
+			      // 4. Major Manager
     private int shiftTotal = 0; // total amount of shifts worked
 	    
     // stat modifiers
@@ -66,7 +70,7 @@ public class Player {
     
     public void promote() {
 	if (this.jobLevel < 5) {
-	    this.jobLevel += 1;
+	    this.jobLevel++;
 	}
     }
     
